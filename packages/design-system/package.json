@@ -107,8 +107,8 @@
     "@types/react-dom": "^19.2.0",
     "expo-blur": "~57.0.2",
     "expo-linear-gradient": "~57.0.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-native": "0.86.2"
   }
 }
