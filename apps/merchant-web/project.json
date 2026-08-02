@@ -1,0 +1,43 @@
+{
+  "name": "merchant-web",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/merchant-web/src",
+  "tags": ["scope:merchant-web", "type:application"],
+  "targets": {
+    "build": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/merchant-web build"
+      },
+      "outputs": ["{projectRoot}/.next"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/merchant-web dev"
+      },
+      "cache": false,
+      "continuous": true
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/merchant-web lint"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/merchant-web test"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/merchant-web typecheck"
+      }
+    }
+  }
+}

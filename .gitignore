@@ -1,0 +1,41 @@
+# Dependencies and build outputs
+node_modules/
+dist/
+.nx/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# Local environments
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.py[cod]
+
+# Framework caches
+.expo/
+.turbo/
+apps/customer-mobile/.expo/
+apps/customer-mobile/web-build/
+apps/customer-mobile/.android.backup-*/
+.runtime-logs/
+
+# Generated code
+packages/database/src/generated/
+
+# Editors and operating systems
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+
+# Local infrastructure data
+.data/

@@ -1,0 +1,43 @@
+{
+  "name": "database",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/database/src",
+  "tags": ["scope:data", "type:database"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
+      "options": {
+        "command": "pnpm --filter @rabbehni/database build"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/database generate"
+      },
+      "outputs": ["{projectRoot}/src/generated"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/database lint"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/database test"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["generate"],
+      "options": {
+        "command": "pnpm --filter @rabbehni/database typecheck"
+      }
+    }
+  }
+}

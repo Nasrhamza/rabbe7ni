@@ -1,0 +1,163 @@
+{
+  "realm": "rabbehni",
+  "displayName": "Rabbehni",
+  "enabled": true,
+  "loginTheme": "rabbehni",
+  "internationalizationEnabled": true,
+  "supportedLocales": ["fr", "en", "ar"],
+  "defaultLocale": "fr",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": true,
+  "verifyEmail": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "bruteForceProtected": true,
+  "otpPolicyType": "totp",
+  "otpPolicyAlgorithm": "HmacSHA256",
+  "otpPolicyDigits": 6,
+  "otpPolicyPeriod": 30,
+  "smtpServer": {
+    "from": "no-reply@rabbehni.local",
+    "fromDisplayName": "Rabbehni",
+    "host": "mailpit",
+    "port": "1025",
+    "auth": "false",
+    "ssl": "false",
+    "starttls": "false"
+  },
+  "clients": [
+    {
+      "clientId": "rabbehni-web",
+      "name": "Rabbehni Web",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "http://localhost:3001/*",
+        "http://localhost:3002/*",
+        "http://localhost:4000/v1/auth/callback"
+      ],
+      "webOrigins": ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "rabbehni-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "rabbehni-api",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant-id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "rabbehni-mobile",
+      "name": "Rabbehni Mobile",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["rabbehni://*", "exp://*"],
+      "webOrigins": [],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "protocolMappers": [
+        {
+          "name": "rabbehni-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "rabbehni-api",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant-id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "rabbehni-api",
+      "name": "Rabbehni API",
+      "enabled": true,
+      "bearerOnly": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    },
+    {
+      "clientId": "rabbehni-auth-admin",
+      "name": "Rabbehni authentication action service",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "rabbehni_auth_admin_dev_secret",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "id": "10000000-0000-4000-8000-000000000006",
+      "username": "owner@demo.rabbehni.local",
+      "email": "owner@demo.rabbehni.local",
+      "firstName": "Rabbehni",
+      "lastName": "Owner",
+      "enabled": true,
+      "emailVerified": true,
+      "attributes": {
+        "tenant_id": ["10000000-0000-4000-8000-000000000001"],
+        "locale": ["fr-TN"]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Rabbehni-Demo-2026!",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "service-account-rabbehni-auth-admin",
+      "enabled": true,
+      "serviceAccountClientId": "rabbehni-auth-admin",
+      "clientRoles": {
+        "realm-management": ["manage-users", "view-users"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Rabbehni Customer",
+    "slug": "hamza",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rabbehni.mobile"
+    },
+    "android": {
+      "package": "com.rabbehni.mobile"
+    },
+    "scheme": "rabbehni",
+    "plugins": ["expo-dev-client", "expo-secure-store"],
+    "extra": {
+      "phase": "3",
+      "eas": {
+        "projectId": "12be8892-68db-4dd3-bf3b-5e00494a284c"
+      }
+    },
+    "owner": "hamz2002s-team"
+  }
+}

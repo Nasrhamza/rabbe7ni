@@ -1,0 +1,114 @@
+{
+  "name": "@rabbehni/design-system",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./web": {
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.js"
+    },
+    "./assets": {
+      "types": "./dist/assets.d.ts",
+      "default": "./dist/assets.js"
+    },
+    "./auth-slider": {
+      "types": "./dist/auth-slider.d.ts",
+      "default": "./dist/auth-slider.js"
+    },
+    "./branch-map": {
+      "types": "./dist/branch-map.d.ts",
+      "default": "./dist/branch-map.js"
+    },
+    "./structured-data-editor": {
+      "types": "./dist/structured-data-editor.d.ts",
+      "default": "./dist/structured-data-editor.js"
+    },
+    "./dashboard-web": {
+      "types": "./dist/dashboard-web.d.ts",
+      "default": "./dist/dashboard-web.js"
+    },
+    "./language-switcher": {
+      "types": "./dist/language-switcher.d.ts",
+      "default": "./dist/language-switcher.js"
+    },
+    "./locale": {
+      "types": "./dist/locale.d.ts",
+      "default": "./dist/locale.js"
+    },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "default": "./dist/icons.js"
+    },
+    "./navigation-item": {
+      "types": "./dist/navigation-item.d.ts",
+      "default": "./dist/navigation-item.js"
+    },
+    "./theme-toggle": {
+      "types": "./dist/theme-toggle.d.ts",
+      "default": "./dist/theme-toggle.js"
+    },
+    "./workspace-shell": {
+      "types": "./dist/workspace-shell.d.ts",
+      "default": "./dist/workspace-shell.js"
+    },
+    "./phase6-web": {
+      "types": "./dist/phase6-web.d.ts",
+      "default": "./dist/phase6-web.js"
+    },
+    "./phase7-web": {
+      "types": "./dist/phase7-web.d.ts",
+      "default": "./dist/phase7-web.js"
+    },
+    "./phase8-web": {
+      "types": "./dist/phase8-web.d.ts",
+      "default": "./dist/phase8-web.js"
+    },
+    "./phase9-web": {
+      "types": "./dist/phase9-web.d.ts",
+      "default": "./dist/phase9-web.js"
+    },
+    "./native": "./src/native.tsx",
+    "./styles.css": "./src/styles.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "expo-blur": "~57.0.2",
+    "expo-linear-gradient": "~57.0.1",
+    "react": ">=19.2.3 <20",
+    "react-dom": ">=19.2.3 <20",
+    "react-native": ">=0.86.0 <0.87"
+  },
+  "peerDependenciesMeta": {
+    "expo-blur": {
+      "optional": true
+    },
+    "expo-linear-gradient": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "@types/react-dom": "^19.2.0",
+    "expo-blur": "~57.0.2",
+    "expo-linear-gradient": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2"
+  }
+}

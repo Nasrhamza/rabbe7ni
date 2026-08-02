@@ -1,0 +1,13 @@
+.git
+.github
+.nx
+.venv
+**/.next
+**/.expo
+**/__pycache__
+**/dist
+**/node_modules
+.env
+.env.*
+!.env.example
+coverage

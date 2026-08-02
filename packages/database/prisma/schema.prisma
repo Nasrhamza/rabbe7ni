@@ -1,0 +1,3284 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  DISABLED
+
+  @@map("user_status")
+}
+
+enum TenantStatus {
+  PROVISIONING
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("tenant_status")
+}
+
+enum RegionStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+
+  @@map("region_status")
+}
+
+enum MembershipStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  REVOKED
+
+  @@map("membership_status")
+}
+
+enum StaffStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  TERMINATED
+  REMOVED
+
+  @@map("staff_status")
+}
+
+enum OrganizationStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("organization_status")
+}
+
+enum FranchiseStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("franchise_status")
+}
+
+enum MerchantStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("merchant_status")
+}
+
+enum BranchStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("branch_status")
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  PAUSED
+  CANCELED
+  EXPIRED
+
+  @@map("subscription_status")
+}
+
+enum PlanStatus {
+  DRAFT
+  ACTIVE
+  RETIRED
+
+  @@map("plan_status")
+}
+
+enum BillingInterval {
+  MONTHLY
+  ANNUAL
+
+  @@map("billing_interval")
+}
+
+enum SubscriptionChangeType {
+  TRIAL_STARTED
+  ACTIVATED
+  RENEWED
+  UPGRADED
+  DOWNGRADED
+  CANCELLATION_SCHEDULED
+  CANCELED
+  SUSPENDED
+  REACTIVATED
+
+  @@map("subscription_change_type")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+
+  @@map("payment_status")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+
+  @@map("invoice_status")
+}
+
+enum BillingWebhookStatus {
+  RECEIVED
+  PROCESSED
+  REJECTED
+
+  @@map("billing_webhook_status")
+}
+
+enum CustomDomainStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  DISABLED
+
+  @@map("custom_domain_status")
+}
+
+enum RoleScope {
+  ORGANIZATION
+  FRANCHISE
+  MERCHANT
+  BRANCH
+
+  @@map("role_scope")
+}
+
+enum OutboxStatus {
+  PENDING
+  PUBLISHED
+  FAILED
+
+  @@map("outbox_status")
+}
+
+enum CustomerStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("customer_status")
+}
+
+enum LoyaltyProgramStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("loyalty_program_status")
+}
+
+enum PointsEntryType {
+  EARN
+  REDEEM
+  EXPIRE
+  ADJUST
+  REVERSE
+
+  @@map("points_entry_type")
+}
+
+enum RewardStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("reward_status")
+}
+
+enum RewardRedemptionStatus {
+  PENDING
+  COMPLETED
+  CANCELED
+  REVERSED
+
+  @@map("reward_redemption_status")
+}
+
+enum QrPurpose {
+  IDENTITY
+  EARN
+  REDEEM
+
+  @@map("qr_purpose")
+}
+
+enum QrTokenStatus {
+  ACTIVE
+  CONSUMED
+  EXPIRED
+  REVOKED
+
+  @@map("qr_token_status")
+}
+
+enum QrTransactionStatus {
+  SUCCEEDED
+  REJECTED
+
+  @@map("qr_transaction_status")
+}
+
+enum GamificationStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("gamification_status")
+}
+
+enum XpEntryType {
+  AWARD
+  ADJUST
+  REVERSE
+
+  @@map("xp_entry_type")
+}
+
+enum ChallengeType {
+  INDIVIDUAL
+  COMMUNITY
+
+  @@map("challenge_type")
+}
+
+enum ChallengeCadence {
+  ONE_TIME
+  DAILY
+  WEEKLY
+  RECURRING
+
+  @@map("challenge_cadence")
+}
+
+enum ChallengeStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  COMPLETED
+  CANCELED
+  EXPIRED
+  ARCHIVED
+
+  @@map("challenge_status")
+}
+
+enum ChallengeValidation {
+  AUTOMATIC
+  MANUAL
+
+  @@map("challenge_validation")
+}
+
+enum ChallengeEnrollmentStatus {
+  ENROLLED
+  PENDING_VALIDATION
+  COMPLETED
+  CANCELED
+  EXPIRED
+
+  @@map("challenge_enrollment_status")
+}
+
+enum ChallengeRewardType {
+  POINTS
+  XP
+  BADGE
+
+  @@map("challenge_reward_type")
+}
+
+enum GamificationProgressSource {
+  EVENT
+  CHECK_IN
+  MANUAL
+
+  @@map("gamification_progress_source")
+}
+
+enum HabitCadence {
+  DAILY
+  WEEKLY
+
+  @@map("habit_cadence")
+}
+
+enum BadgeRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+
+  @@map("badge_rarity")
+}
+
+enum BadgeVisibility {
+  VISIBLE
+  HIDDEN
+
+  @@map("badge_visibility")
+}
+
+enum LeaderboardScope {
+  TENANT
+  ORGANIZATION
+  FRANCHISE
+  MERCHANT
+  BRANCH
+
+  @@map("leaderboard_scope")
+}
+
+enum LeaderboardPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ALL_TIME
+
+  @@map("leaderboard_period")
+}
+
+enum LeaderboardMetric {
+  XP
+  POINTS
+  CHALLENGES
+  STREAK
+
+  @@map("leaderboard_metric")
+}
+
+enum GamificationEventStatus {
+  PROCESSING
+  PROCESSED
+  FAILED
+
+  @@map("gamification_event_status")
+}
+
+enum SegmentType {
+  STATIC
+  DYNAMIC
+
+  @@map("segment_type")
+}
+
+enum MarketingStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+
+  @@map("marketing_status")
+}
+
+enum SegmentMembershipAction {
+  JOINED
+  LEFT
+
+  @@map("segment_membership_action")
+}
+
+enum CampaignType {
+  INFORMATIONAL
+  PROMOTIONAL
+  LOYALTY
+  REWARD
+  RE_ENGAGEMENT
+  CHALLENGE
+  BIRTHDAY
+  ANNIVERSARY
+
+  @@map("campaign_type")
+}
+
+enum CampaignStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+  SCHEDULED
+  RUNNING
+  PAUSED
+  COMPLETED
+  CANCELLED
+  ARCHIVED
+
+  @@map("campaign_status")
+}
+
+enum AutomationType {
+  EVENT_TRIGGERED
+  SCHEDULED
+
+  @@map("automation_type")
+}
+
+enum AutomationStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  CANCELLED
+  ARCHIVED
+
+  @@map("automation_status")
+}
+
+enum AutomationStepType {
+  CONDITION
+  WAIT
+  NOTIFICATION
+  REWARD
+  EXIT
+
+  @@map("automation_step_type")
+}
+
+enum AutomationExecutionStatus {
+  RUNNING
+  WAITING
+  COMPLETED
+  FAILED
+  CANCELLED
+  DEAD_LETTER
+
+  @@map("automation_execution_status")
+}
+
+enum NotificationChannel {
+  EMAIL
+  PUSH
+  SMS
+  IN_APP
+  WHATSAPP
+
+  @@map("notification_channel")
+}
+
+enum NotificationCategory {
+  TRANSACTIONAL
+  MARKETING
+  LOYALTY
+  REWARD
+  GAMIFICATION
+  SYSTEM
+
+  @@map("notification_category")
+}
+
+enum NotificationTemplateStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+
+  @@map("notification_template_status")
+}
+
+enum NotificationDeliveryStatus {
+  QUEUED
+  PROCESSING
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+  CANCELLED
+  DEAD_LETTER
+
+  @@map("notification_delivery_status")
+}
+
+enum CampaignMetricType {
+  TARGETED
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  OPENED
+  CLICKED
+  CONVERTED
+  UNSUBSCRIBED
+
+  @@map("campaign_metric_type")
+}
+
+enum MarketingEventStatus {
+  PROCESSING
+  PROCESSED
+  FAILED
+  DEAD_LETTER
+
+  @@map("marketing_event_status")
+}
+
+enum ReportFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+
+  @@map("report_frequency")
+}
+
+enum ReportExecutionStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+  DEAD_LETTER
+  EXPIRED
+
+  @@map("report_execution_status")
+}
+
+enum AiCapability {
+  SEGMENT_ASSISTANCE
+  CAMPAIGN_AUDIENCE
+  REWARD_RECOMMENDATION
+  CHURN_RISK
+  ENGAGEMENT_RISK
+  CAMPAIGN_TIMING
+  ANOMALY_DETECTION
+  ANALYTICS_EXPLANATION
+  OPERATIONAL_SUMMARY
+
+  @@map("ai_capability")
+}
+
+enum AiRequestStatus {
+  PROCESSING
+  COMPLETED
+  FALLBACK
+  FAILED
+
+  @@map("ai_request_status")
+}
+
+enum GameType {
+  SPIN_WHEEL
+  SCRATCH_CARD
+  MYSTERY_BOX
+
+  @@map("game_type")
+}
+
+enum GameStatus {
+  DRAFT
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+
+  @@map("game_status")
+}
+
+enum GamePrizeType {
+  POINTS
+  REWARD
+  DISCOUNT
+  TRY_AGAIN
+
+  @@map("game_prize_type")
+}
+
+enum ReferralStatus {
+  PENDING
+  QUALIFIED
+  REWARDED
+  CANCELED
+
+  @@map("referral_status")
+}
+
+enum VisitStatus {
+  VALIDATED
+  REVERSED
+
+  @@map("visit_status")
+}
+
+model User {
+  id                  String                @id @default(uuid()) @db.Uuid
+  externalSubject     String?               @unique @map("external_subject")
+  email               String
+  normalizedEmail     String                @unique @map("normalized_email")
+  displayName         String                @map("display_name")
+  locale              String                @default("en")
+  status              UserStatus            @default(INVITED)
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deactivatedAt       DateTime?             @map("deactivated_at") @db.Timestamptz(3)
+  memberships         Membership[]
+  staffProfiles       Staff[]
+  auditLogs           AuditLog[]            @relation("AuditActor")
+  updatedSettings     TenantSetting[]       @relation("TenantSettingUpdater")
+  authSessions        AuthSession[]
+  customers           Customer[]
+  pointsEntries       PointsLedgerEntry[]   @relation("PointsEntryActor")
+  xpEntries           XpLedgerEntry[]       @relation("XpEntryActor")
+  revokedBadges       CustomerBadge[]       @relation("BadgeRevoker")
+  regionalAssignments RegionAdministrator[]
+
+  @@index([status])
+  @@map("users")
+}
+
+model Tenant {
+  id                             String                            @id @default(uuid()) @db.Uuid
+  slug                           String                            @unique
+  status                         TenantStatus                      @default(PROVISIONING)
+  region                         String
+  defaultLocale                  String                            @default("en") @map("default_locale")
+  defaultCurrency                String                            @default("TND") @map("default_currency") @db.Char(3)
+  createdAt                      DateTime                          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                      DateTime                          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  organizations                  Organization[]
+  franchises                     Franchise[]
+  merchants                      Merchant[]
+  branches                       Branch[]
+  memberships                    Membership[]
+  staff                          Staff[]
+  roles                          Role[]
+  rolePermissions                RolePermission[]
+  membershipRoles                MembershipRole[]
+  subscriptions                  Subscription[]
+  subscriptionChanges            SubscriptionChange[]
+  paymentIntents                 PaymentIntent[]
+  paymentTransactions            PaymentTransaction[]
+  invoices                       Invoice[]
+  billingWebhooks                BillingWebhook[]
+  usageRecords                   UsageRecord[]
+  quotaOverrides                 TenantQuotaOverride[]
+  whiteLabelProfile              WhiteLabelProfile?
+  localizationProfile            TenantLocalization?
+  customDomains                  CustomDomain[]
+  settings                       TenantSetting[]
+  auditLogs                      AuditLog[]
+  outboxEvents                   OutboxEvent[]
+  authSessions                   AuthSession[]
+  customers                      Customer[]
+  customerActivities             CustomerActivity[]
+  loyaltyPrograms                LoyaltyProgram[]
+  earningRules                   EarningRule[]
+  redemptionRules                RedemptionRule[]
+  programMerchants               ProgramMerchant[]
+  programBranches                ProgramBranch[]
+  pointsEntries                  PointsLedgerEntry[]
+  rewardCategories               RewardCategory[]
+  rewards                        Reward[]
+  rewardMerchants                RewardMerchant[]
+  rewardBranches                 RewardBranch[]
+  rewardRedemptions              RewardRedemption[]
+  qrTokens                       CustomerQrToken[]
+  qrTransactions                 QrTransaction[]
+  gamificationConfig             GamificationConfig?
+  xpRules                        XpRule[]
+  levels                         LevelDefinition[]
+  gamificationProfiles           CustomerGamificationProfile[]
+  xpEntries                      XpLedgerEntry[]
+  levelHistory                   CustomerLevelHistory[]
+  challenges                     Challenge[]
+  challengeScopes                ChallengeApplicability[]
+  challengeEnrollments           ChallengeEnrollment[]
+  challengeProgress              ChallengeProgressEvent[]
+  challengeRewards               ChallengeReward[]
+  challengeGrants                ChallengeRewardGrant[]
+  habits                         Habit[]
+  customerHabits                 CustomerHabit[]
+  habitCompletions               HabitCompletion[]
+  habitMilestones                HabitMilestone[]
+  streakRules                    StreakRule[]
+  customerStreaks                CustomerStreak[]
+  streakHistory                  StreakHistory[]
+  badgeCategories                BadgeCategory[]
+  badges                         Badge[]
+  achievementRules               AchievementRule[]
+  achievementProgress            AchievementProgress[]
+  customerBadges                 CustomerBadge[]
+  leaderboardConfigs             LeaderboardConfig[]
+  leaderboardSnapshots           LeaderboardSnapshot[]
+  leaderboardEntries             LeaderboardEntry[]
+  gamificationEvents             GamificationEventReceipt[]
+  customerSegments               CustomerSegment[]
+  segmentMemberships             SegmentMembership[]
+  segmentHistory                 SegmentMembershipHistory[]
+  campaigns                      Campaign[]
+  campaignSegments               CampaignSegment[]
+  campaignScopes                 CampaignApplicability[]
+  automationWorkflows            AutomationWorkflow[]
+  automationSteps                AutomationStep[]
+  automationExecutions           AutomationExecution[]
+  automationStepRuns             AutomationStepExecution[]
+  notificationTemplates          NotificationTemplate[]
+  templateVersions               NotificationTemplateVersion[]
+  notificationDeliveries         NotificationDelivery[]
+  notificationAttempts           NotificationAttempt[]
+  inAppNotifications             InAppNotification[]
+  communicationPreferenceRecords CustomerCommunicationPreference[]
+  campaignMetrics                CampaignMetric[]
+  marketingEvents                MarketingEventReceipt[]
+  reportDefinitions              ReportDefinition[]
+  reportExecutions               ReportExecution[]
+  reportArtifacts                ReportArtifact[]
+  aiInsightRequests              AiInsightRequest[]
+  games                          GameConfiguration[]
+  gamePrizes                     GamePrize[]
+  gamePlays                      GamePlay[]
+  visits                         CustomerVisit[]
+  referrals                      CustomerReferral[]
+  countries                      PlatformCountry[]
+  regions                        PlatformRegion[]
+  regionAdministrators           RegionAdministrator[]
+
+  @@index([status])
+  @@map("tenants")
+}
+
+model PlatformCountry {
+  id              String           @id @default(uuid()) @db.Uuid
+  tenantId        String           @map("tenant_id") @db.Uuid
+  code            String           @db.Char(2)
+  name            String
+  defaultLocale   String           @default("en") @map("default_locale")
+  defaultCurrency String           @default("USD") @map("default_currency") @db.Char(3)
+  active          Boolean          @default(true)
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  archivedAt      DateTime?        @map("archived_at") @db.Timestamptz(3)
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  regions         PlatformRegion[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, active])
+  @@map("platform_countries")
+}
+
+model PlatformRegion {
+  id              String                @id @default(uuid()) @db.Uuid
+  tenantId        String                @map("tenant_id") @db.Uuid
+  countryId       String                @map("country_id") @db.Uuid
+  code            String
+  name            String
+  timezone        String
+  locale          String
+  currency        String                @db.Char(3)
+  status          RegionStatus          @default(ACTIVE)
+  culturalProfile Json                  @default("{}") @map("cultural_profile")
+  createdAt       DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  archivedAt      DateTime?             @map("archived_at") @db.Timestamptz(3)
+  tenant          Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  country         PlatformCountry       @relation(fields: [countryId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  administrators  RegionAdministrator[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, countryId, status])
+  @@map("platform_regions")
+}
+
+model RegionAdministrator {
+  id         String         @id @default(uuid()) @db.Uuid
+  tenantId   String         @map("tenant_id") @db.Uuid
+  regionId   String         @map("region_id") @db.Uuid
+  userId     String         @map("user_id") @db.Uuid
+  assignedAt DateTime       @default(now()) @map("assigned_at") @db.Timestamptz(3)
+  tenant     Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  region     PlatformRegion @relation(fields: [regionId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, regionId, userId])
+  @@index([tenantId, userId])
+  @@map("region_administrators")
+}
+
+model Organization {
+  id                    String                        @id @default(uuid()) @db.Uuid
+  tenantId              String                        @map("tenant_id") @db.Uuid
+  code                  String
+  legalName             String                        @map("legal_name")
+  displayName           String                        @map("display_name")
+  registrationNumber    String?                       @map("registration_number")
+  taxIdentifier         String?                       @map("tax_identifier")
+  countryCode           String                        @map("country_code") @db.Char(2)
+  timezone              String
+  status                OrganizationStatus            @default(DRAFT)
+  settings              Json                          @default("{}")
+  activatedAt           DateTime?                     @map("activated_at") @db.Timestamptz(3)
+  suspendedAt           DateTime?                     @map("suspended_at") @db.Timestamptz(3)
+  archivedAt            DateTime?                     @map("archived_at") @db.Timestamptz(3)
+  createdAt             DateTime                      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime                      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  franchises            Franchise[]
+  merchants             Merchant[]
+  branches              Branch[]
+  memberships           Membership[]
+  staff                 Staff[]
+  customers             Customer[]
+  loyaltyPrograms       LoyaltyProgram[]
+  rewardCategories      RewardCategory[]
+  rewards               Reward[]
+  pointsEntries         PointsLedgerEntry[]
+  rewardRedemptions     RewardRedemption[]
+  xpRules               XpRule[]
+  gamificationProfiles  CustomerGamificationProfile[]
+  xpEntries             XpLedgerEntry[]
+  games                 GameConfiguration[]
+  visits                CustomerVisit[]
+  referrals             CustomerReferral[]
+  challenges            Challenge[]
+  habits                Habit[]
+  streakRules           StreakRule[]
+  badgeCategories       BadgeCategory[]
+  badges                Badge[]
+  customerSegments      CustomerSegment[]
+  campaigns             Campaign[]
+  automationWorkflows   AutomationWorkflow[]
+  notificationTemplates NotificationTemplate[]
+  reportDefinitions     ReportDefinition[]
+  aiInsightRequests     AiInsightRequest[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@map("organizations")
+}
+
+model Franchise {
+  id             String          @id @default(uuid()) @db.Uuid
+  tenantId       String          @map("tenant_id") @db.Uuid
+  organizationId String          @map("organization_id") @db.Uuid
+  code           String
+  name           String
+  description    String?
+  status         FranchiseStatus @default(ACTIVE)
+  settings       Json            @default("{}")
+  archivedAt     DateTime?       @map("archived_at") @db.Timestamptz(3)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization   Organization    @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  merchants      Merchant[]
+  branches       Branch[]
+  staff          Staff[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([organizationId, tenantId])
+  @@index([tenantId, status])
+  @@map("franchises")
+}
+
+model Merchant {
+  id                String              @id @default(uuid()) @db.Uuid
+  tenantId          String              @map("tenant_id") @db.Uuid
+  organizationId    String              @map("organization_id") @db.Uuid
+  franchiseId       String?             @map("franchise_id") @db.Uuid
+  code              String
+  legalName         String              @map("legal_name")
+  displayName       String              @map("display_name")
+  status            MerchantStatus      @default(DRAFT)
+  contactEmail      String?             @map("contact_email")
+  contactPhone      String?             @map("contact_phone")
+  website           String?
+  addressLine       String?             @map("address_line")
+  city              String?
+  countryCode       String?             @map("country_code") @db.Char(2)
+  timezone          String?
+  locale            String?
+  settings          Json                @default("{}")
+  activatedAt       DateTime?           @map("activated_at") @db.Timestamptz(3)
+  suspendedAt       DateTime?           @map("suspended_at") @db.Timestamptz(3)
+  archivedAt        DateTime?           @map("archived_at") @db.Timestamptz(3)
+  createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization      Organization        @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  franchise         Franchise?          @relation(fields: [franchiseId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  branches          Branch[]
+  staff             Staff[]
+  programMerchants  ProgramMerchant[]
+  pointsEntries     PointsLedgerEntry[]
+  rewardMerchants   RewardMerchant[]
+  rewardRedemptions RewardRedemption[]
+  qrTransactions    QrTransaction[]
+  visits            CustomerVisit[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([organizationId, tenantId])
+  @@index([franchiseId, tenantId])
+  @@index([tenantId, status])
+  @@map("merchants")
+}
+
+model Branch {
+  id                String              @id @default(uuid()) @db.Uuid
+  tenantId          String              @map("tenant_id") @db.Uuid
+  organizationId    String              @map("organization_id") @db.Uuid
+  merchantId        String              @map("merchant_id") @db.Uuid
+  franchiseId       String?             @map("franchise_id") @db.Uuid
+  code              String
+  name              String
+  addressLine       String?             @map("address_line")
+  addressLine2      String?             @map("address_line_2")
+  city              String?
+  region            String?
+  postalCode        String?             @map("postal_code")
+  countryCode       String              @map("country_code") @db.Char(2)
+  timezone          String
+  locale            String              @default("en")
+  currency          String              @db.Char(3)
+  phone             String?
+  email             String?
+  status            BranchStatus        @default(ACTIVE)
+  settings          Json                @default("{}")
+  openingHours      Json                @default("{}") @map("opening_hours")
+  archivedAt        DateTime?           @map("archived_at") @db.Timestamptz(3)
+  createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization      Organization        @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  merchant          Merchant            @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  franchise         Franchise?          @relation(fields: [franchiseId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  staff             Staff[]
+  programBranches   ProgramBranch[]
+  pointsEntries     PointsLedgerEntry[]
+  rewardBranches    RewardBranch[]
+  rewardRedemptions RewardRedemption[]
+  qrTransactions    QrTransaction[]
+  visits            CustomerVisit[]
+
+  @@unique([id, tenantId])
+  @@unique([id, merchantId, tenantId])
+  @@unique([tenantId, code])
+  @@index([organizationId, tenantId])
+  @@index([merchantId, tenantId])
+  @@index([franchiseId, tenantId])
+  @@index([tenantId, status])
+  @@map("branches")
+}
+
+model Membership {
+  id             String           @id @default(uuid()) @db.Uuid
+  tenantId       String           @map("tenant_id") @db.Uuid
+  organizationId String           @map("organization_id") @db.Uuid
+  userId         String           @map("user_id") @db.Uuid
+  status         MembershipStatus @default(INVITED)
+  invitedAt      DateTime?        @map("invited_at") @db.Timestamptz(3)
+  joinedAt       DateTime?        @map("joined_at") @db.Timestamptz(3)
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization   Organization     @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roles          MembershipRole[]
+  staffProfiles  Staff[]
+
+  @@unique([id, tenantId])
+  @@unique([id, userId, tenantId])
+  @@unique([id, userId, organizationId, tenantId])
+  @@unique([tenantId, userId])
+  @@index([organizationId, tenantId])
+  @@index([userId])
+  @@index([tenantId, status])
+  @@map("memberships")
+}
+
+model Staff {
+  id             String       @id @default(uuid()) @db.Uuid
+  tenantId       String       @map("tenant_id") @db.Uuid
+  membershipId   String       @map("membership_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  franchiseId    String?      @map("franchise_id") @db.Uuid
+  merchantId     String?      @map("merchant_id") @db.Uuid
+  branchId       String?      @map("branch_id") @db.Uuid
+  employeeCode   String?      @map("employee_code")
+  jobTitle       String?      @map("job_title")
+  status         StaffStatus  @default(INVITED)
+  invitedAt      DateTime     @default(now()) @map("invited_at") @db.Timestamptz(3)
+  activatedAt    DateTime?    @map("activated_at") @db.Timestamptz(3)
+  suspendedAt    DateTime?    @map("suspended_at") @db.Timestamptz(3)
+  removedAt      DateTime?    @map("removed_at") @db.Timestamptz(3)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  membership     Membership   @relation(fields: [membershipId, userId, organizationId, tenantId], references: [id, userId, organizationId, tenantId], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  franchise      Franchise?   @relation(fields: [franchiseId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  merchant       Merchant?    @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  branch         Branch?      @relation(fields: [branchId, merchantId, tenantId], references: [id, merchantId, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, employeeCode])
+  @@index([membershipId, tenantId])
+  @@index([userId])
+  @@index([organizationId, tenantId])
+  @@index([franchiseId, tenantId])
+  @@index([merchantId, tenantId])
+  @@index([branchId, tenantId])
+  @@index([tenantId, status])
+  @@map("staff")
+}
+
+model Role {
+  id              String           @id @default(uuid()) @db.Uuid
+  tenantId        String           @map("tenant_id") @db.Uuid
+  code            String
+  name            String
+  description     String?
+  scope           RoleScope        @default(ORGANIZATION)
+  system          Boolean          @default(false)
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  permissions     RolePermission[]
+  membershipRoles MembershipRole[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, scope])
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid()) @db.Uuid
+  code        String           @unique
+  description String
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  roles       RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  tenantId     String     @map("tenant_id") @db.Uuid
+  roleId       String     @map("role_id") @db.Uuid
+  permissionId String     @map("permission_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant       Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([tenantId, roleId, permissionId])
+  @@index([roleId, tenantId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model MembershipRole {
+  tenantId     String     @map("tenant_id") @db.Uuid
+  membershipId String     @map("membership_id") @db.Uuid
+  roleId       String     @map("role_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant       Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  membership   Membership @relation(fields: [membershipId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  role         Role       @relation(fields: [roleId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@id([tenantId, membershipId, roleId])
+  @@index([membershipId, tenantId])
+  @@index([roleId, tenantId])
+  @@map("membership_roles")
+}
+
+model Customer {
+  id                             String                            @id @default(uuid()) @db.Uuid
+  tenantId                       String                            @map("tenant_id") @db.Uuid
+  organizationId                 String                            @map("organization_id") @db.Uuid
+  userId                         String?                           @map("user_id") @db.Uuid
+  externalReference              String?                           @map("external_reference")
+  email                          String?
+  normalizedEmail                String?                           @map("normalized_email")
+  phone                          String?
+  firstName                      String?                           @map("first_name")
+  lastName                       String?                           @map("last_name")
+  displayName                    String                            @map("display_name")
+  locale                         String                            @default("en")
+  birthDate                      DateTime?                         @map("birth_date") @db.Date
+  status                         CustomerStatus                    @default(ACTIVE)
+  preferences                    Json                              @default("{}")
+  communicationPreferences       Json                              @default("{}") @map("communication_preferences")
+  consents                       Json                              @default("{}")
+  activatedAt                    DateTime?                         @map("activated_at") @db.Timestamptz(3)
+  suspendedAt                    DateTime?                         @map("suspended_at") @db.Timestamptz(3)
+  archivedAt                     DateTime?                         @map("archived_at") @db.Timestamptz(3)
+  createdAt                      DateTime                          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                      DateTime                          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                         Tenant                            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization                   Organization                      @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  user                           User?                             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  activities                     CustomerActivity[]
+  pointsEntries                  PointsLedgerEntry[]
+  rewardRedemptions              RewardRedemption[]
+  qrTokens                       CustomerQrToken[]
+  qrTransactions                 QrTransaction[]
+  gamificationProfile            CustomerGamificationProfile?
+  xpEntries                      XpLedgerEntry[]
+  levelHistory                   CustomerLevelHistory[]
+  challengeEnrollments           ChallengeEnrollment[]
+  challengeProgress              ChallengeProgressEvent[]
+  challengeGrants                ChallengeRewardGrant[]
+  customerHabits                 CustomerHabit[]
+  habitCompletions               HabitCompletion[]
+  customerStreaks                CustomerStreak[]
+  streakHistory                  StreakHistory[]
+  badges                         CustomerBadge[]
+  achievementProgress            AchievementProgress[]
+  leaderboardEntries             LeaderboardEntry[]
+  segmentMemberships             SegmentMembership[]
+  segmentHistory                 SegmentMembershipHistory[]
+  automationExecutions           AutomationExecution[]
+  notificationDeliveries         NotificationDelivery[]
+  inAppNotifications             InAppNotification[]
+  communicationPreferenceRecords CustomerCommunicationPreference[]
+  reportSubscriptions            ReportDefinition[]
+  gamePlays                      GamePlay[]
+  visits                         CustomerVisit[]
+  referralsSent                  CustomerReferral[]                @relation("ReferralSender")
+  referralReceived               CustomerReferral?                 @relation("ReferralReceiver")
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, userId])
+  @@unique([tenantId, normalizedEmail])
+  @@unique([tenantId, externalReference])
+  @@index([organizationId, tenantId])
+  @@index([tenantId, status])
+  @@index([tenantId, phone])
+  @@map("customers")
+}
+
+model CustomerActivity {
+  id          String   @id @default(uuid()) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  customerId  String   @map("customer_id") @db.Uuid
+  type        String
+  referenceId String?  @map("reference_id")
+  metadata    Json     @default("{}")
+  occurredAt  DateTime @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer    Customer @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, customerId, occurredAt(sort: Desc)])
+  @@map("customer_activities")
+}
+
+model LoyaltyProgram {
+  id                    String               @id @default(uuid()) @db.Uuid
+  tenantId              String               @map("tenant_id") @db.Uuid
+  organizationId        String               @map("organization_id") @db.Uuid
+  code                  String
+  name                  String
+  description           String?
+  pointsLabel           String               @default("points") @map("points_label")
+  status                LoyaltyProgramStatus @default(DRAFT)
+  expirationDays        Int?                 @map("expiration_days")
+  minimumEarnPoints     Int                  @default(1) @map("minimum_earn_points")
+  maximumEarnPoints     Int?                 @map("maximum_earn_points")
+  minimumRedeemPoints   Int                  @default(1) @map("minimum_redeem_points")
+  maximumRedeemPoints   Int?                 @map("maximum_redeem_points")
+  appliesToAllMerchants Boolean              @default(true) @map("applies_to_all_merchants")
+  appliesToAllBranches  Boolean              @default(true) @map("applies_to_all_branches")
+  settings              Json                 @default("{}")
+  activatedAt           DateTime?            @map("activated_at") @db.Timestamptz(3)
+  suspendedAt           DateTime?            @map("suspended_at") @db.Timestamptz(3)
+  archivedAt            DateTime?            @map("archived_at") @db.Timestamptz(3)
+  createdAt             DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization          Organization         @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  earningRules          EarningRule[]
+  redemptionRules       RedemptionRule[]
+  merchants             ProgramMerchant[]
+  branches              ProgramBranch[]
+  pointsEntries         PointsLedgerEntry[]
+  rewards               Reward[]
+  rewardRedemptions     RewardRedemption[]
+  challengeRewards      ChallengeReward[]
+  habitMilestones       HabitMilestone[]
+  games                 GameConfiguration[]
+  gamePlays             GamePlay[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([organizationId, tenantId])
+  @@index([tenantId, status])
+  @@map("loyalty_programs")
+}
+
+model EarningRule {
+  id            String         @id @default(uuid()) @db.Uuid
+  tenantId      String         @map("tenant_id") @db.Uuid
+  programId     String         @map("program_id") @db.Uuid
+  code          String
+  name          String
+  eventType     String         @map("event_type")
+  points        Int
+  multiplier    Decimal        @default(1) @db.Decimal(12, 4)
+  minimumAmount Decimal?       @map("minimum_amount") @db.Decimal(18, 3)
+  maximumPoints Int?           @map("maximum_points")
+  priority      Int            @default(100)
+  active        Boolean        @default(true)
+  startsAt      DateTime?      @map("starts_at") @db.Timestamptz(3)
+  endsAt        DateTime?      @map("ends_at") @db.Timestamptz(3)
+  conditions    Json           @default("{}")
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  program       LoyaltyProgram @relation(fields: [programId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, programId, code])
+  @@index([tenantId, programId, active])
+  @@map("earning_rules")
+}
+
+model RedemptionRule {
+  id              String         @id @default(uuid()) @db.Uuid
+  tenantId        String         @map("tenant_id") @db.Uuid
+  programId       String         @map("program_id") @db.Uuid
+  code            String
+  name            String
+  minimumPoints   Int            @default(1) @map("minimum_points")
+  maximumPoints   Int?           @map("maximum_points")
+  incrementPoints Int            @default(1) @map("increment_points")
+  active          Boolean        @default(true)
+  startsAt        DateTime?      @map("starts_at") @db.Timestamptz(3)
+  endsAt          DateTime?      @map("ends_at") @db.Timestamptz(3)
+  conditions      Json           @default("{}")
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  program         LoyaltyProgram @relation(fields: [programId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, programId, code])
+  @@index([tenantId, programId, active])
+  @@map("redemption_rules")
+}
+
+model ProgramMerchant {
+  tenantId       String         @map("tenant_id") @db.Uuid
+  programId      String         @map("program_id") @db.Uuid
+  merchantId     String         @map("merchant_id") @db.Uuid
+  organizationId String         @map("organization_id") @db.Uuid
+  tenant         Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  program        LoyaltyProgram @relation(fields: [programId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  merchant       Merchant       @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+
+  @@id([tenantId, programId, merchantId])
+  @@index([tenantId, merchantId])
+  @@map("program_merchants")
+}
+
+model ProgramBranch {
+  tenantId       String         @map("tenant_id") @db.Uuid
+  programId      String         @map("program_id") @db.Uuid
+  branchId       String         @map("branch_id") @db.Uuid
+  organizationId String         @map("organization_id") @db.Uuid
+  merchantId     String         @map("merchant_id") @db.Uuid
+  tenant         Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  program        LoyaltyProgram @relation(fields: [programId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  branch         Branch         @relation(fields: [branchId, merchantId, tenantId], references: [id, merchantId, tenantId], onDelete: Cascade)
+
+  @@id([tenantId, programId, branchId])
+  @@index([tenantId, branchId])
+  @@map("program_branches")
+}
+
+model PointsLedgerEntry {
+  id                 String             @id @default(uuid()) @db.Uuid
+  tenantId           String             @map("tenant_id") @db.Uuid
+  organizationId     String             @map("organization_id") @db.Uuid
+  programId          String             @map("program_id") @db.Uuid
+  customerId         String             @map("customer_id") @db.Uuid
+  merchantId         String?            @map("merchant_id") @db.Uuid
+  branchId           String?            @map("branch_id") @db.Uuid
+  type               PointsEntryType
+  points             Int
+  idempotencyKey     String             @map("idempotency_key")
+  referenceType      String?            @map("reference_type")
+  referenceId        String?            @map("reference_id")
+  sourceEntryId      String?            @map("source_entry_id") @db.Uuid
+  expiresAt          DateTime?          @map("expires_at") @db.Timestamptz(3)
+  metadata           Json               @default("{}")
+  createdByUserId    String?            @map("created_by_user_id") @db.Uuid
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant             Tenant             @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  organization       Organization       @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  program            LoyaltyProgram     @relation(fields: [programId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  customer           Customer           @relation(fields: [customerId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  merchant           Merchant?          @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  branch             Branch?            @relation(fields: [branchId, merchantId, tenantId], references: [id, merchantId, tenantId], onDelete: Restrict)
+  sourceEntry        PointsLedgerEntry? @relation("PointsReversal", fields: [sourceEntryId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  reversalEntry      PointsLedgerEntry? @relation("PointsReversal")
+  createdBy          User?              @relation("PointsEntryActor", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  redemption         RewardRedemption?  @relation("RedemptionPointsEntry")
+  reversedRedemption RewardRedemption?  @relation("RedemptionReversalEntry")
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@unique([sourceEntryId, tenantId])
+  @@index([tenantId, customerId, programId, createdAt(sort: Desc)])
+  @@index([tenantId, referenceType, referenceId])
+  @@index([tenantId, expiresAt])
+  @@map("points_ledger_entries")
+}
+
+model RewardCategory {
+  id             String       @id @default(uuid()) @db.Uuid
+  tenantId       String       @map("tenant_id") @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  code           String
+  name           String
+  description    String?
+  archivedAt     DateTime?    @map("archived_at") @db.Timestamptz(3)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  rewards        Reward[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([organizationId, tenantId])
+  @@map("reward_categories")
+}
+
+model Reward {
+  id                    String             @id @default(uuid()) @db.Uuid
+  tenantId              String             @map("tenant_id") @db.Uuid
+  organizationId        String             @map("organization_id") @db.Uuid
+  programId             String             @map("program_id") @db.Uuid
+  categoryId            String?            @map("category_id") @db.Uuid
+  code                  String
+  name                  String
+  description           String?
+  status                RewardStatus       @default(DRAFT)
+  pointsCost            Int                @map("points_cost")
+  stockQuantity         Int?               @map("stock_quantity")
+  unlimitedStock        Boolean            @default(false) @map("unlimited_stock")
+  eligibilityRules      Json               @default("{}") @map("eligibility_rules")
+  appliesToAllMerchants Boolean            @default(true) @map("applies_to_all_merchants")
+  appliesToAllBranches  Boolean            @default(true) @map("applies_to_all_branches")
+  startsAt              DateTime?          @map("starts_at") @db.Timestamptz(3)
+  endsAt                DateTime?          @map("ends_at") @db.Timestamptz(3)
+  archivedAt            DateTime?          @map("archived_at") @db.Timestamptz(3)
+  createdAt             DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization          Organization       @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  program               LoyaltyProgram     @relation(fields: [programId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  category              RewardCategory?    @relation(fields: [categoryId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  merchants             RewardMerchant[]
+  branches              RewardBranch[]
+  redemptions           RewardRedemption[]
+  gamePrizes            GamePrize[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, programId, status])
+  @@index([tenantId, categoryId])
+  @@map("rewards")
+}
+
+model RewardMerchant {
+  tenantId       String   @map("tenant_id") @db.Uuid
+  rewardId       String   @map("reward_id") @db.Uuid
+  merchantId     String   @map("merchant_id") @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reward         Reward   @relation(fields: [rewardId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  merchant       Merchant @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+
+  @@id([tenantId, rewardId, merchantId])
+  @@index([tenantId, merchantId])
+  @@map("reward_merchants")
+}
+
+model RewardBranch {
+  tenantId       String @map("tenant_id") @db.Uuid
+  rewardId       String @map("reward_id") @db.Uuid
+  branchId       String @map("branch_id") @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+  merchantId     String @map("merchant_id") @db.Uuid
+  tenant         Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reward         Reward @relation(fields: [rewardId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  branch         Branch @relation(fields: [branchId, merchantId, tenantId], references: [id, merchantId, tenantId], onDelete: Cascade)
+
+  @@id([tenantId, rewardId, branchId])
+  @@index([tenantId, branchId])
+  @@map("reward_branches")
+}
+
+model RewardRedemption {
+  id              String                 @id @default(uuid()) @db.Uuid
+  tenantId        String                 @map("tenant_id") @db.Uuid
+  organizationId  String                 @map("organization_id") @db.Uuid
+  programId       String                 @map("program_id") @db.Uuid
+  customerId      String                 @map("customer_id") @db.Uuid
+  rewardId        String                 @map("reward_id") @db.Uuid
+  merchantId      String?                @map("merchant_id") @db.Uuid
+  branchId        String?                @map("branch_id") @db.Uuid
+  pointsEntryId   String                 @unique @map("points_entry_id") @db.Uuid
+  reversalEntryId String?                @unique @map("reversal_entry_id") @db.Uuid
+  quantity        Int                    @default(1)
+  pointsSpent     Int                    @map("points_spent")
+  status          RewardRedemptionStatus @default(PENDING)
+  idempotencyKey  String                 @map("idempotency_key")
+  metadata        Json                   @default("{}")
+  redeemedAt      DateTime?              @map("redeemed_at") @db.Timestamptz(3)
+  canceledAt      DateTime?              @map("canceled_at") @db.Timestamptz(3)
+  reversedAt      DateTime?              @map("reversed_at") @db.Timestamptz(3)
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  organization    Organization           @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  program         LoyaltyProgram         @relation(fields: [programId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  customer        Customer               @relation(fields: [customerId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  reward          Reward                 @relation(fields: [rewardId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  merchant        Merchant?              @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  branch          Branch?                @relation(fields: [branchId, merchantId, tenantId], references: [id, merchantId, tenantId], onDelete: Restrict)
+  pointsEntry     PointsLedgerEntry      @relation("RedemptionPointsEntry", fields: [pointsEntryId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  reversalEntry   PointsLedgerEntry?     @relation("RedemptionReversalEntry", fields: [reversalEntryId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@unique([pointsEntryId, tenantId])
+  @@unique([reversalEntryId, tenantId])
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@index([tenantId, rewardId, status])
+  @@map("reward_redemptions")
+}
+
+model CustomerQrToken {
+  id           String          @id @default(uuid()) @db.Uuid
+  tenantId     String          @map("tenant_id") @db.Uuid
+  customerId   String          @map("customer_id") @db.Uuid
+  purpose      QrPurpose
+  nonce        String
+  tokenHash    String          @map("token_hash") @db.Char(64)
+  status       QrTokenStatus   @default(ACTIVE)
+  context      Json            @default("{}")
+  expiresAt    DateTime        @map("expires_at") @db.Timestamptz(3)
+  consumedAt   DateTime?       @map("consumed_at") @db.Timestamptz(3)
+  revokedAt    DateTime?       @map("revoked_at") @db.Timestamptz(3)
+  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant       Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer     Customer        @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  transactions QrTransaction[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, nonce])
+  @@unique([tenantId, tokenHash])
+  @@index([tenantId, customerId, status])
+  @@index([tenantId, expiresAt])
+  @@map("customer_qr_tokens")
+}
+
+model QrTransaction {
+  id              String              @id @default(uuid()) @db.Uuid
+  tenantId        String              @map("tenant_id") @db.Uuid
+  qrTokenId       String?             @map("qr_token_id") @db.Uuid
+  customerId      String?             @map("customer_id") @db.Uuid
+  merchantId      String?             @map("merchant_id") @db.Uuid
+  branchId        String?             @map("branch_id") @db.Uuid
+  purpose         QrPurpose
+  status          QrTransactionStatus
+  idempotencyKey  String              @map("idempotency_key")
+  resultReference String?             @map("result_reference")
+  failureReason   String?             @map("failure_reason")
+  metadata        Json                @default("{}")
+  occurredAt      DateTime            @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  token           CustomerQrToken?    @relation(fields: [qrTokenId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer        Customer?           @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  merchant        Merchant?           @relation(fields: [merchantId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  branch          Branch?             @relation(fields: [branchId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  visit           CustomerVisit?
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, customerId, occurredAt(sort: Desc)])
+  @@index([tenantId, status, occurredAt(sort: Desc)])
+  @@map("qr_transactions")
+}
+
+model GameConfiguration {
+  id              String         @id @default(uuid()) @db.Uuid
+  tenantId        String         @map("tenant_id") @db.Uuid
+  organizationId  String         @map("organization_id") @db.Uuid
+  programId       String         @map("program_id") @db.Uuid
+  code            String
+  type            GameType
+  name            String
+  description     String?
+  status          GameStatus     @default(DRAFT)
+  cooldownMinutes Int            @default(1440) @map("cooldown_minutes")
+  dailyLimit      Int            @default(1) @map("daily_limit")
+  settings        Json           @default("{}")
+  startsAt        DateTime?      @map("starts_at") @db.Timestamptz(3)
+  endsAt          DateTime?      @map("ends_at") @db.Timestamptz(3)
+  archivedAt      DateTime?      @map("archived_at") @db.Timestamptz(3)
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization    Organization   @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  program         LoyaltyProgram @relation(fields: [programId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  prizes          GamePrize[]
+  plays           GamePlay[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status])
+  @@index([tenantId, type, status])
+  @@map("game_configurations")
+}
+
+model GamePrize {
+  id                String            @id @default(uuid()) @db.Uuid
+  tenantId          String            @map("tenant_id") @db.Uuid
+  gameId            String            @map("game_id") @db.Uuid
+  rewardId          String?           @map("reward_id") @db.Uuid
+  code              String
+  label             String
+  type              GamePrizeType
+  points            Int               @default(0)
+  discountPercent   Int?              @map("discount_percent")
+  probabilityWeight Int               @map("probability_weight")
+  color             String            @default("#2563eb")
+  active            Boolean           @default(true)
+  stockQuantity     Int?              @map("stock_quantity")
+  metadata          Json              @default("{}")
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  game              GameConfiguration @relation(fields: [gameId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  reward            Reward?           @relation(fields: [rewardId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  plays             GamePlay[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, gameId, code])
+  @@index([tenantId, gameId, active])
+  @@index([tenantId, rewardId])
+  @@map("game_prizes")
+}
+
+model GamePlay {
+  id              String            @id @default(uuid()) @db.Uuid
+  tenantId        String            @map("tenant_id") @db.Uuid
+  gameId          String            @map("game_id") @db.Uuid
+  prizeId         String            @map("prize_id") @db.Uuid
+  programId       String            @map("program_id") @db.Uuid
+  customerId      String            @map("customer_id") @db.Uuid
+  idempotencyKey  String            @map("idempotency_key")
+  pointsAwarded   Int               @default(0) @map("points_awarded")
+  resultReference String?           @map("result_reference")
+  metadata        Json              @default("{}")
+  playedAt        DateTime          @default(now()) @map("played_at") @db.Timestamptz(3)
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  game            GameConfiguration @relation(fields: [gameId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  prize           GamePrize         @relation(fields: [prizeId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  program         LoyaltyProgram    @relation(fields: [programId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer        Customer          @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, customerId, playedAt(sort: Desc)])
+  @@index([tenantId, gameId, playedAt(sort: Desc)])
+  @@map("game_plays")
+}
+
+model CustomerVisit {
+  id              String         @id @default(uuid()) @db.Uuid
+  tenantId        String         @map("tenant_id") @db.Uuid
+  organizationId  String         @map("organization_id") @db.Uuid
+  customerId      String         @map("customer_id") @db.Uuid
+  merchantId      String         @map("merchant_id") @db.Uuid
+  branchId        String         @map("branch_id") @db.Uuid
+  qrTransactionId String?        @unique @map("qr_transaction_id") @db.Uuid
+  status          VisitStatus    @default(VALIDATED)
+  source          String         @default("QR")
+  metadata        Json           @default("{}")
+  visitedAt       DateTime       @default(now()) @map("visited_at") @db.Timestamptz(3)
+  reversedAt      DateTime?      @map("reversed_at") @db.Timestamptz(3)
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  organization    Organization   @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer        Customer       @relation(fields: [customerId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  merchant        Merchant       @relation(fields: [merchantId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  branch          Branch         @relation(fields: [branchId, merchantId, tenantId], references: [id, merchantId, tenantId], onDelete: Restrict)
+  qrTransaction   QrTransaction? @relation(fields: [qrTransactionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([qrTransactionId, tenantId])
+  @@index([tenantId, customerId, visitedAt(sort: Desc)])
+  @@index([tenantId, branchId, visitedAt(sort: Desc)])
+  @@map("customer_visits")
+}
+
+model CustomerReferral {
+  id                 String         @id @default(uuid()) @db.Uuid
+  tenantId           String         @map("tenant_id") @db.Uuid
+  organizationId     String         @map("organization_id") @db.Uuid
+  referrerCustomerId String         @map("referrer_customer_id") @db.Uuid
+  referredCustomerId String?        @map("referred_customer_id") @db.Uuid
+  code               String
+  status             ReferralStatus @default(PENDING)
+  rewardPoints       Int            @default(0) @map("reward_points")
+  qualifiedAt        DateTime?      @map("qualified_at") @db.Timestamptz(3)
+  rewardedAt         DateTime?      @map("rewarded_at") @db.Timestamptz(3)
+  metadata           Json           @default("{}")
+  createdAt          DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant             Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization       Organization   @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  referrer           Customer       @relation("ReferralSender", fields: [referrerCustomerId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Cascade)
+  referred           Customer?      @relation("ReferralReceiver", fields: [referredCustomerId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@unique([referredCustomerId, organizationId, tenantId])
+  @@index([tenantId, referrerCustomerId, createdAt(sort: Desc)])
+  @@index([tenantId, status])
+  @@map("customer_referrals")
+}
+
+model GamificationConfig {
+  id                    String   @id @default(uuid()) @db.Uuid
+  tenantId              String   @unique @map("tenant_id") @db.Uuid
+  active                Boolean  @default(true)
+  defaultTimezone       String   @default("UTC") @map("default_timezone")
+  allowManualCorrection Boolean  @default(false) @map("allow_manual_correction")
+  settings              Json     @default("{}")
+  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("gamification_configs")
+}
+
+model XpRule {
+  id             String             @id @default(uuid()) @db.Uuid
+  tenantId       String             @map("tenant_id") @db.Uuid
+  organizationId String             @map("organization_id") @db.Uuid
+  code           String
+  name           String
+  description    String?
+  eventType      String             @map("event_type")
+  xp             Int
+  priority       Int                @default(100)
+  status         GamificationStatus @default(DRAFT)
+  startsAt       DateTime?          @map("starts_at") @db.Timestamptz(3)
+  endsAt         DateTime?          @map("ends_at") @db.Timestamptz(3)
+  conditions     Json               @default("{}")
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization   Organization       @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  xpEntries      XpLedgerEntry[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status])
+  @@index([tenantId, eventType, status])
+  @@map("xp_rules")
+}
+
+model LevelDefinition {
+  id          String                        @id @default(uuid()) @db.Uuid
+  tenantId    String                        @map("tenant_id") @db.Uuid
+  code        String
+  name        String
+  level       Int
+  xpThreshold Int                           @map("xp_threshold")
+  status      GamificationStatus            @default(ACTIVE)
+  benefits    Json                          @default("{}")
+  metadata    Json                          @default("{}")
+  createdAt   DateTime                      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime                      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant      Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customers   CustomerGamificationProfile[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@unique([tenantId, level])
+  @@unique([tenantId, xpThreshold])
+  @@index([tenantId, status, xpThreshold])
+  @@map("level_definitions")
+}
+
+model CustomerGamificationProfile {
+  id                     String           @id @default(uuid()) @db.Uuid
+  tenantId               String           @map("tenant_id") @db.Uuid
+  organizationId         String           @map("organization_id") @db.Uuid
+  customerId             String           @map("customer_id") @db.Uuid
+  totalXp                Int              @default(0) @map("total_xp")
+  currentLevelId         String?          @map("current_level_id") @db.Uuid
+  leaderboardOptOut      Boolean          @default(false) @map("leaderboard_opt_out")
+  anonymizeOnLeaderboard Boolean          @default(false) @map("anonymize_on_leaderboard")
+  leaderboardAlias       String?          @map("leaderboard_alias")
+  createdAt              DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                 Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization           Organization     @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer               Customer         @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  currentLevel           LevelDefinition? @relation(fields: [currentLevelId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, customerId])
+  @@unique([customerId, tenantId])
+  @@index([tenantId, organizationId, totalXp(sort: Desc)])
+  @@map("customer_gamification_profiles")
+}
+
+model XpLedgerEntry {
+  id              String         @id @default(uuid()) @db.Uuid
+  tenantId        String         @map("tenant_id") @db.Uuid
+  organizationId  String         @map("organization_id") @db.Uuid
+  customerId      String         @map("customer_id") @db.Uuid
+  ruleId          String?        @map("rule_id") @db.Uuid
+  type            XpEntryType
+  xp              Int
+  idempotencyKey  String         @map("idempotency_key")
+  referenceType   String?        @map("reference_type")
+  referenceId     String?        @map("reference_id")
+  sourceEntryId   String?        @map("source_entry_id") @db.Uuid
+  metadata        Json           @default("{}")
+  createdByUserId String?        @map("created_by_user_id") @db.Uuid
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  organization    Organization   @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer        Customer       @relation(fields: [customerId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  rule            XpRule?        @relation(fields: [ruleId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  sourceEntry     XpLedgerEntry? @relation("XpReversal", fields: [sourceEntryId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  reversalEntry   XpLedgerEntry? @relation("XpReversal")
+  createdBy       User?          @relation("XpEntryActor", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@unique([sourceEntryId, tenantId])
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@index([tenantId, referenceType, referenceId])
+  @@map("xp_ledger_entries")
+}
+
+model CustomerLevelHistory {
+  id                   String   @id @default(uuid()) @db.Uuid
+  tenantId             String   @map("tenant_id") @db.Uuid
+  customerId           String   @map("customer_id") @db.Uuid
+  fromLevel            Int?     @map("from_level")
+  toLevel              Int      @map("to_level")
+  xpAtChange           Int      @map("xp_at_change")
+  reason               String
+  authorizedCorrection Boolean  @default(false) @map("authorized_correction")
+  idempotencyKey       String   @map("idempotency_key")
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant               Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  customer             Customer @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@map("customer_level_history")
+}
+
+model Challenge {
+  id                String                   @id @default(uuid()) @db.Uuid
+  tenantId          String                   @map("tenant_id") @db.Uuid
+  organizationId    String                   @map("organization_id") @db.Uuid
+  code              String
+  name              String
+  description       String?
+  type              ChallengeType            @default(INDIVIDUAL)
+  cadence           ChallengeCadence         @default(ONE_TIME)
+  status            ChallengeStatus          @default(DRAFT)
+  validationMode    ChallengeValidation      @default(AUTOMATIC) @map("validation_mode")
+  objectiveType     String                   @map("objective_type")
+  target            Int
+  eligibility       Json                     @default("{}")
+  recurrence        Json                     @default("{}")
+  startAt           DateTime                 @map("start_at") @db.Timestamptz(3)
+  endAt             DateTime                 @map("end_at") @db.Timestamptz(3)
+  communityProgress Int                      @default(0) @map("community_progress")
+  autoEnroll        Boolean                  @default(false) @map("auto_enroll")
+  archivedAt        DateTime?                @map("archived_at") @db.Timestamptz(3)
+  createdAt         DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization      Organization             @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  scopes            ChallengeApplicability[]
+  enrollments       ChallengeEnrollment[]
+  progressEvents    ChallengeProgressEvent[]
+  rewards           ChallengeReward[]
+  rewardGrants      ChallengeRewardGrant[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status, startAt, endAt])
+  @@index([tenantId, objectiveType, status])
+  @@map("challenges")
+}
+
+model ChallengeApplicability {
+  id          String           @id @default(uuid()) @db.Uuid
+  tenantId    String           @map("tenant_id") @db.Uuid
+  challengeId String           @map("challenge_id") @db.Uuid
+  scope       LeaderboardScope
+  targetId    String           @map("target_id") @db.Uuid
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  challenge   Challenge        @relation(fields: [challengeId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, challengeId, scope, targetId])
+  @@index([tenantId, scope, targetId])
+  @@map("challenge_applicability")
+}
+
+model ChallengeEnrollment {
+  id                String                    @id @default(uuid()) @db.Uuid
+  tenantId          String                    @map("tenant_id") @db.Uuid
+  challengeId       String                    @map("challenge_id") @db.Uuid
+  customerId        String                    @map("customer_id") @db.Uuid
+  status            ChallengeEnrollmentStatus @default(ENROLLED)
+  progress          Int                       @default(0)
+  enrolledAt        DateTime                  @default(now()) @map("enrolled_at") @db.Timestamptz(3)
+  completedAt       DateTime?                 @map("completed_at") @db.Timestamptz(3)
+  validatedAt       DateTime?                 @map("validated_at") @db.Timestamptz(3)
+  validatedByUserId String?                   @map("validated_by_user_id") @db.Uuid
+  createdAt         DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  challenge         Challenge                 @relation(fields: [challengeId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer          Customer                  @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  progressEvents    ChallengeProgressEvent[]
+  rewardGrants      ChallengeRewardGrant[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, challengeId, customerId])
+  @@index([tenantId, customerId, status])
+  @@index([tenantId, challengeId, status])
+  @@map("challenge_enrollments")
+}
+
+model ChallengeProgressEvent {
+  id                String                     @id @default(uuid()) @db.Uuid
+  tenantId          String                     @map("tenant_id") @db.Uuid
+  challengeId       String                     @map("challenge_id") @db.Uuid
+  enrollmentId      String                     @map("enrollment_id") @db.Uuid
+  customerId        String                     @map("customer_id") @db.Uuid
+  source            GamificationProgressSource
+  delta             Int
+  resultingProgress Int                        @map("resulting_progress")
+  idempotencyKey    String                     @map("idempotency_key")
+  referenceType     String?                    @map("reference_type")
+  referenceId       String?                    @map("reference_id")
+  metadata          Json                       @default("{}")
+  occurredAt        DateTime                   @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant            Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  challenge         Challenge                  @relation(fields: [challengeId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enrollment        ChallengeEnrollment        @relation(fields: [enrollmentId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer          Customer                   @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, enrollmentId, occurredAt])
+  @@index([tenantId, referenceType, referenceId])
+  @@map("challenge_progress_events")
+}
+
+model ChallengeReward {
+  id               String                 @id @default(uuid()) @db.Uuid
+  tenantId         String                 @map("tenant_id") @db.Uuid
+  challengeId      String                 @map("challenge_id") @db.Uuid
+  type             ChallengeRewardType
+  amount           Int?
+  badgeId          String?                @map("badge_id") @db.Uuid
+  loyaltyProgramId String?                @map("loyalty_program_id") @db.Uuid
+  metadata         Json                   @default("{}")
+  createdAt        DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant           Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  challenge        Challenge              @relation(fields: [challengeId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  badge            Badge?                 @relation(fields: [badgeId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  loyaltyProgram   LoyaltyProgram?        @relation(fields: [loyaltyProgramId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  grants           ChallengeRewardGrant[]
+
+  @@unique([id, tenantId])
+  @@index([tenantId, challengeId, type])
+  @@map("challenge_rewards")
+}
+
+model ChallengeRewardGrant {
+  id                String              @id @default(uuid()) @db.Uuid
+  tenantId          String              @map("tenant_id") @db.Uuid
+  challengeId       String              @map("challenge_id") @db.Uuid
+  challengeRewardId String              @map("challenge_reward_id") @db.Uuid
+  enrollmentId      String              @map("enrollment_id") @db.Uuid
+  customerId        String              @map("customer_id") @db.Uuid
+  idempotencyKey    String              @map("idempotency_key")
+  pointsEntryId     String?             @map("points_entry_id") @db.Uuid
+  xpEntryId         String?             @map("xp_entry_id") @db.Uuid
+  customerBadgeId   String?             @map("customer_badge_id") @db.Uuid
+  grantedAt         DateTime            @default(now()) @map("granted_at") @db.Timestamptz(3)
+  tenant            Tenant              @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  challenge         Challenge           @relation(fields: [challengeId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  reward            ChallengeReward     @relation(fields: [challengeRewardId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enrollment        ChallengeEnrollment @relation(fields: [enrollmentId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer          Customer            @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@unique([tenantId, challengeRewardId, enrollmentId])
+  @@index([tenantId, customerId, grantedAt(sort: Desc)])
+  @@map("challenge_reward_grants")
+}
+
+model Habit {
+  id              String             @id @default(uuid()) @db.Uuid
+  tenantId        String             @map("tenant_id") @db.Uuid
+  organizationId  String             @map("organization_id") @db.Uuid
+  code            String
+  name            String
+  description     String?
+  cadence         HabitCadence       @default(DAILY)
+  status          GamificationStatus @default(DRAFT)
+  objectiveType   String             @map("objective_type")
+  target          Int                @default(1)
+  timezone        String?
+  graceDays       Int                @default(0) @map("grace_days")
+  freezeAllowance Int                @default(0) @map("freeze_allowance")
+  startsAt        DateTime?          @map("starts_at") @db.Timestamptz(3)
+  endsAt          DateTime?          @map("ends_at") @db.Timestamptz(3)
+  conditions      Json               @default("{}")
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization    Organization       @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customers       CustomerHabit[]
+  completions     HabitCompletion[]
+  milestones      HabitMilestone[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status])
+  @@index([tenantId, objectiveType, status])
+  @@map("habits")
+}
+
+model CustomerHabit {
+  id                     String            @id @default(uuid()) @db.Uuid
+  tenantId               String            @map("tenant_id") @db.Uuid
+  habitId                String            @map("habit_id") @db.Uuid
+  customerId             String            @map("customer_id") @db.Uuid
+  active                 Boolean           @default(true)
+  currentPeriodProgress  Int               @default(0) @map("current_period_progress")
+  currentPeriodKey       String?           @map("current_period_key")
+  currentStreak          Int               @default(0) @map("current_streak")
+  longestStreak          Int               @default(0) @map("longest_streak")
+  freezesRemaining       Int               @default(0) @map("freezes_remaining")
+  lastQualifiedLocalDate DateTime?         @map("last_qualified_local_date") @db.Date
+  enrolledAt             DateTime          @default(now()) @map("enrolled_at") @db.Timestamptz(3)
+  updatedAt              DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                 Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  habit                  Habit             @relation(fields: [habitId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer               Customer          @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  completions            HabitCompletion[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, habitId, customerId])
+  @@index([tenantId, customerId, active])
+  @@map("customer_habits")
+}
+
+model HabitCompletion {
+  id              String                     @id @default(uuid()) @db.Uuid
+  tenantId        String                     @map("tenant_id") @db.Uuid
+  habitId         String                     @map("habit_id") @db.Uuid
+  customerHabitId String                     @map("customer_habit_id") @db.Uuid
+  customerId      String                     @map("customer_id") @db.Uuid
+  source          GamificationProgressSource
+  localDate       DateTime                   @map("local_date") @db.Date
+  periodKey       String                     @map("period_key")
+  progress        Int
+  completed       Boolean                    @default(false)
+  timezone        String
+  idempotencyKey  String                     @map("idempotency_key")
+  referenceType   String?                    @map("reference_type")
+  referenceId     String?                    @map("reference_id")
+  occurredAt      DateTime                   @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant          Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  habit           Habit                      @relation(fields: [habitId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customerHabit   CustomerHabit              @relation(fields: [customerHabitId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer        Customer                   @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, customerHabitId, localDate])
+  @@map("habit_completions")
+}
+
+model HabitMilestone {
+  id               String              @id @default(uuid()) @db.Uuid
+  tenantId         String              @map("tenant_id") @db.Uuid
+  habitId          String              @map("habit_id") @db.Uuid
+  streakThreshold  Int                 @map("streak_threshold")
+  rewardType       ChallengeRewardType @map("reward_type")
+  rewardAmount     Int?                @map("reward_amount")
+  badgeId          String?             @map("badge_id") @db.Uuid
+  loyaltyProgramId String?             @map("loyalty_program_id") @db.Uuid
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant           Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  habit            Habit               @relation(fields: [habitId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  badge            Badge?              @relation(fields: [badgeId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  loyaltyProgram   LoyaltyProgram?     @relation(fields: [loyaltyProgramId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, habitId, streakThreshold])
+  @@map("habit_milestones")
+}
+
+model StreakRule {
+  id              String             @id @default(uuid()) @db.Uuid
+  tenantId        String             @map("tenant_id") @db.Uuid
+  organizationId  String             @map("organization_id") @db.Uuid
+  code            String
+  name            String
+  qualifyingEvent String             @map("qualifying_event")
+  status          GamificationStatus @default(DRAFT)
+  timezone        String?
+  graceDays       Int                @default(0) @map("grace_days")
+  freezeAllowance Int                @default(0) @map("freeze_allowance")
+  conditions      Json               @default("{}")
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization    Organization       @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customerStreaks CustomerStreak[]
+  history         StreakHistory[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status])
+  @@index([tenantId, qualifyingEvent, status])
+  @@map("streak_rules")
+}
+
+model CustomerStreak {
+  id                     String          @id @default(uuid()) @db.Uuid
+  tenantId               String          @map("tenant_id") @db.Uuid
+  streakRuleId           String          @map("streak_rule_id") @db.Uuid
+  customerId             String          @map("customer_id") @db.Uuid
+  currentStreak          Int             @default(0) @map("current_streak")
+  longestStreak          Int             @default(0) @map("longest_streak")
+  freezesRemaining       Int             @default(0) @map("freezes_remaining")
+  lastQualifiedLocalDate DateTime?       @map("last_qualified_local_date") @db.Date
+  updatedAt              DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                 Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rule                   StreakRule      @relation(fields: [streakRuleId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer               Customer        @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  history                StreakHistory[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, streakRuleId, customerId])
+  @@index([tenantId, customerId, currentStreak(sort: Desc)])
+  @@map("customer_streaks")
+}
+
+model StreakHistory {
+  id               String         @id @default(uuid()) @db.Uuid
+  tenantId         String         @map("tenant_id") @db.Uuid
+  customerStreakId String         @map("customer_streak_id") @db.Uuid
+  streakRuleId     String         @map("streak_rule_id") @db.Uuid
+  customerId       String         @map("customer_id") @db.Uuid
+  localDate        DateTime       @map("local_date") @db.Date
+  previousStreak   Int            @map("previous_streak")
+  currentStreak    Int            @map("current_streak")
+  action           String
+  idempotencyKey   String         @map("idempotency_key")
+  occurredAt       DateTime       @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant           Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  customerStreak   CustomerStreak @relation(fields: [customerStreakId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  rule             StreakRule     @relation(fields: [streakRuleId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  customer         Customer       @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, customerStreakId, occurredAt(sort: Desc)])
+  @@map("streak_history")
+}
+
+model BadgeCategory {
+  id             String       @id @default(uuid()) @db.Uuid
+  tenantId       String       @map("tenant_id") @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  code           String
+  name           String
+  description    String?
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  badges         Badge[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@map("badge_categories")
+}
+
+model Badge {
+  id               String             @id @default(uuid()) @db.Uuid
+  tenantId         String             @map("tenant_id") @db.Uuid
+  organizationId   String             @map("organization_id") @db.Uuid
+  categoryId       String?            @map("category_id") @db.Uuid
+  code             String
+  name             String
+  description      String?
+  rarity           BadgeRarity        @default(COMMON)
+  visibility       BadgeVisibility    @default(VISIBLE)
+  status           GamificationStatus @default(DRAFT)
+  iconUrl          String?            @map("icon_url")
+  metadata         Json               @default("{}")
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant           Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization     Organization       @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  category         BadgeCategory?     @relation(fields: [categoryId, organizationId, tenantId], references: [id, organizationId, tenantId], onDelete: Restrict)
+  achievementRules AchievementRule[]
+  customers        CustomerBadge[]
+  challengeRewards ChallengeReward[]
+  habitMilestones  HabitMilestone[]
+
+  @@unique([id, tenantId])
+  @@unique([id, organizationId, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status, rarity])
+  @@map("badges")
+}
+
+model AchievementRule {
+  id         String                @id @default(uuid()) @db.Uuid
+  tenantId   String                @map("tenant_id") @db.Uuid
+  badgeId    String                @map("badge_id") @db.Uuid
+  code       String
+  eventType  String                @map("event_type")
+  target     Int                   @default(1)
+  status     GamificationStatus    @default(DRAFT)
+  conditions Json                  @default("{}")
+  createdAt  DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant     Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  badge      Badge                 @relation(fields: [badgeId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  progress   AchievementProgress[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, eventType, status])
+  @@map("achievement_rules")
+}
+
+model AchievementProgress {
+  id          String          @id @default(uuid()) @db.Uuid
+  tenantId    String          @map("tenant_id") @db.Uuid
+  ruleId      String          @map("rule_id") @db.Uuid
+  customerId  String          @map("customer_id") @db.Uuid
+  progress    Int             @default(0)
+  completedAt DateTime?       @map("completed_at") @db.Timestamptz(3)
+  lastEventId String?         @map("last_event_id")
+  updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant      Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rule        AchievementRule @relation(fields: [ruleId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer    Customer        @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, ruleId, customerId])
+  @@index([tenantId, customerId, updatedAt(sort: Desc)])
+  @@map("achievement_progress")
+}
+
+model CustomerBadge {
+  id               String    @id @default(uuid()) @db.Uuid
+  tenantId         String    @map("tenant_id") @db.Uuid
+  customerId       String    @map("customer_id") @db.Uuid
+  badgeId          String    @map("badge_id") @db.Uuid
+  progress         Int       @default(100)
+  earnedAt         DateTime  @default(now()) @map("earned_at") @db.Timestamptz(3)
+  revokedAt        DateTime? @map("revoked_at") @db.Timestamptz(3)
+  revokedByUserId  String?   @map("revoked_by_user_id") @db.Uuid
+  revocationReason String?   @map("revocation_reason")
+  idempotencyKey   String    @map("idempotency_key")
+  metadata         Json      @default("{}")
+  tenant           Tenant    @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  customer         Customer  @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  badge            Badge     @relation(fields: [badgeId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  revokedBy        User?     @relation("BadgeRevoker", fields: [revokedByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, customerId, badgeId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, customerId, earnedAt(sort: Desc)])
+  @@map("customer_badges")
+}
+
+model LeaderboardConfig {
+  id                String                @id @default(uuid()) @db.Uuid
+  tenantId          String                @map("tenant_id") @db.Uuid
+  code              String
+  name              String
+  scope             LeaderboardScope
+  scopeId           String?               @map("scope_id") @db.Uuid
+  period            LeaderboardPeriod
+  metric            LeaderboardMetric
+  status            GamificationStatus    @default(DRAFT)
+  maxEntries        Int                   @default(100) @map("max_entries")
+  anonymizeOptedOut Boolean               @default(true) @map("anonymize_opted_out")
+  schedule          String                @default("0 * * * *")
+  createdAt         DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  snapshots         LeaderboardSnapshot[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, scope, scopeId, status])
+  @@map("leaderboard_configs")
+}
+
+model LeaderboardSnapshot {
+  id             String             @id @default(uuid()) @db.Uuid
+  tenantId       String             @map("tenant_id") @db.Uuid
+  configId       String             @map("config_id") @db.Uuid
+  periodStart    DateTime           @map("period_start") @db.Timestamptz(3)
+  periodEnd      DateTime           @map("period_end") @db.Timestamptz(3)
+  generatedAt    DateTime           @default(now()) @map("generated_at") @db.Timestamptz(3)
+  idempotencyKey String             @map("idempotency_key")
+  tenant         Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  config         LeaderboardConfig  @relation(fields: [configId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  entries        LeaderboardEntry[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@unique([tenantId, configId, periodStart, periodEnd])
+  @@index([tenantId, configId, generatedAt(sort: Desc)])
+  @@map("leaderboard_snapshots")
+}
+
+model LeaderboardEntry {
+  id          String              @id @default(uuid()) @db.Uuid
+  tenantId    String              @map("tenant_id") @db.Uuid
+  snapshotId  String              @map("snapshot_id") @db.Uuid
+  customerId  String              @map("customer_id") @db.Uuid
+  rank        Int
+  score       Int
+  displayName String              @map("display_name")
+  anonymized  Boolean             @default(false)
+  tieBreaker  String              @map("tie_breaker")
+  tenant      Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  snapshot    LeaderboardSnapshot @relation(fields: [snapshotId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer    Customer            @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, snapshotId, customerId])
+  @@unique([tenantId, snapshotId, rank])
+  @@index([tenantId, snapshotId, score(sort: Desc), tieBreaker])
+  @@map("leaderboard_entries")
+}
+
+model GamificationEventReceipt {
+  id            String                  @id @default(uuid()) @db.Uuid
+  tenantId      String                  @map("tenant_id") @db.Uuid
+  eventId       String                  @map("event_id")
+  eventType     String                  @map("event_type")
+  status        GamificationEventStatus @default(PROCESSING)
+  payload       Json                    @default("{}")
+  attempts      Int                     @default(1)
+  failureReason String?                 @map("failure_reason")
+  processedAt   DateTime?               @map("processed_at") @db.Timestamptz(3)
+  createdAt     DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime                @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant        Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, eventId])
+  @@index([tenantId, status, createdAt])
+  @@map("gamification_event_receipts")
+}
+
+model CustomerSegment {
+  id                String                     @id @default(uuid()) @db.Uuid
+  tenantId          String                     @map("tenant_id") @db.Uuid
+  organizationId    String                     @map("organization_id") @db.Uuid
+  code              String
+  name              String
+  description       String?
+  type              SegmentType
+  status            MarketingStatus            @default(DRAFT)
+  rules             Json                       @default("{}")
+  schedule          String?
+  timezone          String                     @default("UTC")
+  estimatedSize     Int                        @default(0) @map("estimated_size")
+  lastRefreshedAt   DateTime?                  @map("last_refreshed_at") @db.Timestamptz(3)
+  nextRefreshAt     DateTime?                  @map("next_refresh_at") @db.Timestamptz(3)
+  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization      Organization               @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  memberships       SegmentMembership[]
+  membershipHistory SegmentMembershipHistory[]
+  campaignSegments  CampaignSegment[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status])
+  @@index([tenantId, nextRefreshAt])
+  @@map("customer_segments")
+}
+
+model SegmentMembership {
+  id         String          @id @default(uuid()) @db.Uuid
+  tenantId   String          @map("tenant_id") @db.Uuid
+  segmentId  String          @map("segment_id") @db.Uuid
+  customerId String          @map("customer_id") @db.Uuid
+  source     String          @default("RULE")
+  joinedAt   DateTime        @default(now()) @map("joined_at") @db.Timestamptz(3)
+  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  segment    CustomerSegment @relation(fields: [segmentId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer   Customer        @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, segmentId, customerId])
+  @@index([tenantId, customerId, segmentId])
+  @@map("segment_memberships")
+}
+
+model SegmentMembershipHistory {
+  id         String                  @id @default(uuid()) @db.Uuid
+  tenantId   String                  @map("tenant_id") @db.Uuid
+  segmentId  String                  @map("segment_id") @db.Uuid
+  customerId String                  @map("customer_id") @db.Uuid
+  action     SegmentMembershipAction
+  reason     String?
+  occurredAt DateTime                @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant     Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  segment    CustomerSegment         @relation(fields: [segmentId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer   Customer                @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, segmentId, occurredAt(sort: Desc)])
+  @@index([tenantId, customerId, occurredAt(sort: Desc)])
+  @@map("segment_membership_history")
+}
+
+model Campaign {
+  id                   String                  @id @default(uuid()) @db.Uuid
+  tenantId             String                  @map("tenant_id") @db.Uuid
+  organizationId       String                  @map("organization_id") @db.Uuid
+  code                 String
+  name                 String
+  description          String?
+  type                 CampaignType
+  status               CampaignStatus          @default(DRAFT)
+  timezone             String                  @default("UTC")
+  startsAt             DateTime?               @map("starts_at") @db.Timestamptz(3)
+  endsAt               DateTime?               @map("ends_at") @db.Timestamptz(3)
+  frequencyCap         Int                     @default(1) @map("frequency_cap")
+  frequencyWindowHours Int                     @default(24) @map("frequency_window_hours")
+  requiresApproval     Boolean                 @default(false) @map("requires_approval")
+  approvedById         String?                 @map("approved_by_id") @db.Uuid
+  approvedAt           DateTime?               @map("approved_at") @db.Timestamptz(3)
+  settings             Json                    @default("{}")
+  createdAt            DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime                @updatedAt @map("updated_at") @db.Timestamptz(3)
+  archivedAt           DateTime?               @map("archived_at") @db.Timestamptz(3)
+  tenant               Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization         Organization            @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  segments             CampaignSegment[]
+  applicability        CampaignApplicability[]
+  deliveries           NotificationDelivery[]
+  metrics              CampaignMetric[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status])
+  @@index([tenantId, status, startsAt])
+  @@map("campaigns")
+}
+
+model CampaignSegment {
+  id         String          @id @default(uuid()) @db.Uuid
+  tenantId   String          @map("tenant_id") @db.Uuid
+  campaignId String          @map("campaign_id") @db.Uuid
+  segmentId  String          @map("segment_id") @db.Uuid
+  createdAt  DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  campaign   Campaign        @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  segment    CustomerSegment @relation(fields: [segmentId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, campaignId, segmentId])
+  @@index([tenantId, segmentId])
+  @@map("campaign_segments")
+}
+
+model CampaignApplicability {
+  id             String   @id @default(uuid()) @db.Uuid
+  tenantId       String   @map("tenant_id") @db.Uuid
+  campaignId     String   @map("campaign_id") @db.Uuid
+  organizationId String?  @map("organization_id") @db.Uuid
+  franchiseId    String?  @map("franchise_id") @db.Uuid
+  merchantId     String?  @map("merchant_id") @db.Uuid
+  branchId       String?  @map("branch_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  campaign       Campaign @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, campaignId])
+  @@index([tenantId, organizationId, franchiseId, merchantId, branchId])
+  @@map("campaign_applicability")
+}
+
+model AutomationWorkflow {
+  id                       String                @id @default(uuid()) @db.Uuid
+  tenantId                 String                @map("tenant_id") @db.Uuid
+  organizationId           String                @map("organization_id") @db.Uuid
+  code                     String
+  name                     String
+  description              String?
+  type                     AutomationType
+  status                   AutomationStatus      @default(DRAFT)
+  triggerType              String                @map("trigger_type")
+  triggerConfig            Json                  @default("{}") @map("trigger_config")
+  schedule                 String?
+  timezone                 String                @default("UTC")
+  exitConditions           Json                  @default("{}") @map("exit_conditions")
+  maxExecutionsPerCustomer Int                   @default(1) @map("max_executions_per_customer")
+  createdAt                DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                   Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization             Organization          @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  steps                    AutomationStep[]
+  executions               AutomationExecution[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, organizationId, status, triggerType])
+  @@map("automation_workflows")
+}
+
+model AutomationStep {
+  id            String                    @id @default(uuid()) @db.Uuid
+  tenantId      String                    @map("tenant_id") @db.Uuid
+  workflowId    String                    @map("workflow_id") @db.Uuid
+  code          String
+  name          String
+  position      Int
+  type          AutomationStepType
+  configuration Json                      @default("{}")
+  delaySeconds  Int                       @default(0) @map("delay_seconds")
+  nextOnTrue    String?                   @map("next_on_true") @db.Uuid
+  nextOnFalse   String?                   @map("next_on_false") @db.Uuid
+  createdAt     DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant        Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      AutomationWorkflow        @relation(fields: [workflowId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  executions    AutomationStepExecution[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, workflowId, code])
+  @@unique([tenantId, workflowId, position])
+  @@index([tenantId, workflowId, position])
+  @@map("automation_steps")
+}
+
+model AutomationExecution {
+  id             String                    @id @default(uuid()) @db.Uuid
+  tenantId       String                    @map("tenant_id") @db.Uuid
+  workflowId     String                    @map("workflow_id") @db.Uuid
+  customerId     String                    @map("customer_id") @db.Uuid
+  eventId        String?                   @map("event_id")
+  idempotencyKey String                    @map("idempotency_key")
+  status         AutomationExecutionStatus @default(RUNNING)
+  currentStepId  String?                   @map("current_step_id") @db.Uuid
+  context        Json                      @default("{}")
+  attempts       Int                       @default(0)
+  nextRunAt      DateTime?                 @map("next_run_at") @db.Timestamptz(3)
+  startedAt      DateTime                  @default(now()) @map("started_at") @db.Timestamptz(3)
+  completedAt    DateTime?                 @map("completed_at") @db.Timestamptz(3)
+  failureReason  String?                   @map("failure_reason")
+  createdAt      DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow       AutomationWorkflow        @relation(fields: [workflowId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  customer       Customer                  @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  stepExecutions AutomationStepExecution[]
+  deliveries     NotificationDelivery[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, workflowId, status, nextRunAt])
+  @@index([tenantId, customerId, startedAt(sort: Desc)])
+  @@map("automation_executions")
+}
+
+model AutomationStepExecution {
+  id             String                    @id @default(uuid()) @db.Uuid
+  tenantId       String                    @map("tenant_id") @db.Uuid
+  executionId    String                    @map("execution_id") @db.Uuid
+  stepId         String                    @map("step_id") @db.Uuid
+  idempotencyKey String                    @map("idempotency_key")
+  status         AutomationExecutionStatus @default(RUNNING)
+  output         Json                      @default("{}")
+  attempts       Int                       @default(1)
+  startedAt      DateTime                  @default(now()) @map("started_at") @db.Timestamptz(3)
+  completedAt    DateTime?                 @map("completed_at") @db.Timestamptz(3)
+  failureReason  String?                   @map("failure_reason")
+  tenant         Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  execution      AutomationExecution       @relation(fields: [executionId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  step           AutomationStep            @relation(fields: [stepId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, executionId, startedAt])
+  @@map("automation_step_executions")
+}
+
+model NotificationTemplate {
+  id                String                        @id @default(uuid()) @db.Uuid
+  tenantId          String                        @map("tenant_id") @db.Uuid
+  organizationId    String                        @map("organization_id") @db.Uuid
+  code              String
+  name              String
+  channel           NotificationChannel
+  category          NotificationCategory
+  status            NotificationTemplateStatus    @default(DRAFT)
+  currentVersion    Int                           @default(1) @map("current_version")
+  branding          Json                          @default("{}")
+  createdAt         DateTime                      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization      Organization                  @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  versions          NotificationTemplateVersion[]
+  deliveries        NotificationDelivery[]
+  reportDefinitions ReportDefinition[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code, channel])
+  @@index([tenantId, organizationId, status, channel])
+  @@map("notification_templates")
+}
+
+model NotificationTemplateVersion {
+  id          String                 @id @default(uuid()) @db.Uuid
+  tenantId    String                 @map("tenant_id") @db.Uuid
+  templateId  String                 @map("template_id") @db.Uuid
+  version     Int
+  locale      String
+  subject     String?
+  body        String
+  variables   Json                   @default("[]")
+  metadata    Json                   @default("{}")
+  createdById String?                @map("created_by_id") @db.Uuid
+  createdAt   DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant      Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  template    NotificationTemplate   @relation(fields: [templateId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  deliveries  NotificationDelivery[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, templateId, version, locale])
+  @@index([tenantId, templateId, version(sort: Desc)])
+  @@map("notification_template_versions")
+}
+
+model NotificationDelivery {
+  id                    String                       @id @default(uuid()) @db.Uuid
+  tenantId              String                       @map("tenant_id") @db.Uuid
+  customerId            String                       @map("customer_id") @db.Uuid
+  campaignId            String?                      @map("campaign_id") @db.Uuid
+  automationExecutionId String?                      @map("automation_execution_id") @db.Uuid
+  templateId            String?                      @map("template_id") @db.Uuid
+  templateVersionId     String?                      @map("template_version_id") @db.Uuid
+  channel               NotificationChannel
+  category              NotificationCategory
+  status                NotificationDeliveryStatus   @default(QUEUED)
+  idempotencyKey        String                       @map("idempotency_key")
+  recipient             String?
+  locale                String
+  renderedSubject       String?                      @map("rendered_subject")
+  renderedBody          String                       @map("rendered_body")
+  variables             Json                         @default("{}")
+  deepLink              Json?                        @map("deep_link")
+  provider              String?
+  providerMessageId     String?                      @map("provider_message_id")
+  providerResponse      Json?                        @map("provider_response")
+  attempts              Int                          @default(0)
+  maxAttempts           Int                          @default(5) @map("max_attempts")
+  scheduledAt           DateTime                     @default(now()) @map("scheduled_at") @db.Timestamptz(3)
+  processingAt          DateTime?                    @map("processing_at") @db.Timestamptz(3)
+  sentAt                DateTime?                    @map("sent_at") @db.Timestamptz(3)
+  deliveredAt           DateTime?                    @map("delivered_at") @db.Timestamptz(3)
+  failedAt              DateTime?                    @map("failed_at") @db.Timestamptz(3)
+  deadLetteredAt        DateTime?                    @map("dead_lettered_at") @db.Timestamptz(3)
+  failureCode           String?                      @map("failure_code")
+  failureReason         String?                      @map("failure_reason")
+  createdAt             DateTime                     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime                     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer              Customer                     @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  campaign              Campaign?                    @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  automationExecution   AutomationExecution?         @relation(fields: [automationExecutionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  template              NotificationTemplate?        @relation(fields: [templateId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  templateVersion       NotificationTemplateVersion? @relation(fields: [templateVersionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  attemptsHistory       NotificationAttempt[]
+  inAppNotification     InAppNotification?
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, status, scheduledAt])
+  @@index([tenantId, customerId, createdAt(sort: Desc)])
+  @@index([tenantId, campaignId, status])
+  @@map("notification_deliveries")
+}
+
+model NotificationAttempt {
+  id               String                     @id @default(uuid()) @db.Uuid
+  tenantId         String                     @map("tenant_id") @db.Uuid
+  deliveryId       String                     @map("delivery_id") @db.Uuid
+  attempt          Int
+  status           NotificationDeliveryStatus
+  provider         String
+  providerResponse Json?                      @map("provider_response")
+  errorCode        String?                    @map("error_code")
+  errorMessage     String?                    @map("error_message")
+  occurredAt       DateTime                   @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant           Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  delivery         NotificationDelivery       @relation(fields: [deliveryId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, deliveryId, attempt])
+  @@index([tenantId, status, occurredAt(sort: Desc)])
+  @@map("notification_attempts")
+}
+
+model InAppNotification {
+  id         String                @id @default(uuid()) @db.Uuid
+  tenantId   String                @map("tenant_id") @db.Uuid
+  customerId String                @map("customer_id") @db.Uuid
+  deliveryId String?               @unique @map("delivery_id") @db.Uuid
+  category   NotificationCategory
+  title      String
+  body       String
+  deepLink   Json?                 @map("deep_link")
+  readAt     DateTime?             @map("read_at") @db.Timestamptz(3)
+  expiresAt  DateTime?             @map("expires_at") @db.Timestamptz(3)
+  createdAt  DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant     Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer   Customer              @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  delivery   NotificationDelivery? @relation(fields: [deliveryId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([deliveryId, tenantId])
+  @@index([tenantId, customerId, readAt, createdAt(sort: Desc)])
+  @@index([tenantId, expiresAt])
+  @@map("in_app_notifications")
+}
+
+model CustomerCommunicationPreference {
+  id               String               @id @default(uuid()) @db.Uuid
+  tenantId         String               @map("tenant_id") @db.Uuid
+  customerId       String               @map("customer_id") @db.Uuid
+  channel          NotificationChannel
+  category         NotificationCategory
+  optedIn          Boolean              @default(true) @map("opted_in")
+  quietHoursStart  String?              @map("quiet_hours_start")
+  quietHoursEnd    String?              @map("quiet_hours_end")
+  timezone         String               @default("UTC")
+  consentSource    String?              @map("consent_source")
+  consentUpdatedAt DateTime             @default(now()) @map("consent_updated_at") @db.Timestamptz(3)
+  createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant           Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer         Customer             @relation(fields: [customerId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, customerId, channel, category])
+  @@index([tenantId, customerId, optedIn])
+  @@map("customer_communication_preferences")
+}
+
+model CampaignMetric {
+  id         String             @id @default(uuid()) @db.Uuid
+  tenantId   String             @map("tenant_id") @db.Uuid
+  campaignId String             @map("campaign_id") @db.Uuid
+  type       CampaignMetricType
+  customerId String?            @map("customer_id") @db.Uuid
+  eventId    String             @map("event_id")
+  value      Int                @default(1)
+  occurredAt DateTime           @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  metadata   Json               @default("{}")
+  tenant     Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  campaign   Campaign           @relation(fields: [campaignId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, campaignId, type, eventId])
+  @@index([tenantId, campaignId, type, occurredAt])
+  @@map("campaign_metrics")
+}
+
+model ReportDefinition {
+  id                     String                @id @default(uuid()) @db.Uuid
+  tenantId               String                @map("tenant_id") @db.Uuid
+  organizationId         String                @map("organization_id") @db.Uuid
+  recipientCustomerId    String?               @map("recipient_customer_id") @db.Uuid
+  notificationTemplateId String?               @map("notification_template_id") @db.Uuid
+  code                   String
+  name                   String
+  frequency              ReportFrequency
+  timezone               String                @default("UTC")
+  filters                Json                  @default("{}")
+  metrics                Json                  @default("[]")
+  active                 Boolean               @default(true)
+  nextRunAt              DateTime?             @map("next_run_at") @db.Timestamptz(3)
+  retentionDays          Int                   @default(30) @map("retention_days")
+  createdAt              DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                 Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization           Organization          @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  recipientCustomer      Customer?             @relation(fields: [recipientCustomerId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  notificationTemplate   NotificationTemplate? @relation(fields: [notificationTemplateId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  executions             ReportExecution[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, code])
+  @@index([tenantId, active, nextRunAt])
+  @@index([tenantId, organizationId])
+  @@map("report_definitions")
+}
+
+model ReportExecution {
+  id             String                @id @default(uuid()) @db.Uuid
+  tenantId       String                @map("tenant_id") @db.Uuid
+  definitionId   String                @map("definition_id") @db.Uuid
+  idempotencyKey String                @map("idempotency_key")
+  status         ReportExecutionStatus @default(QUEUED)
+  periodStart    DateTime              @map("period_start") @db.Timestamptz(3)
+  periodEnd      DateTime              @map("period_end") @db.Timestamptz(3)
+  attempts       Int                   @default(0)
+  resultSummary  Json                  @default("{}") @map("result_summary")
+  failureReason  String?               @map("failure_reason")
+  startedAt      DateTime?             @map("started_at") @db.Timestamptz(3)
+  completedAt    DateTime?             @map("completed_at") @db.Timestamptz(3)
+  createdAt      DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  definition     ReportDefinition      @relation(fields: [definitionId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  artifact       ReportArtifact?
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, definitionId, createdAt(sort: Desc)])
+  @@index([tenantId, status, createdAt])
+  @@map("report_executions")
+}
+
+model ReportArtifact {
+  id          String          @id @default(uuid()) @db.Uuid
+  tenantId    String          @map("tenant_id") @db.Uuid
+  executionId String          @unique @map("execution_id") @db.Uuid
+  fileName    String          @map("file_name")
+  mimeType    String          @map("mime_type")
+  content     Bytes
+  checksum    String          @db.Char(64)
+  sizeBytes   Int             @map("size_bytes")
+  expiresAt   DateTime        @map("expires_at") @db.Timestamptz(3)
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant      Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  execution   ReportExecution @relation(fields: [executionId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([executionId, tenantId])
+  @@index([tenantId, expiresAt])
+  @@map("report_artifacts")
+}
+
+model AiInsightRequest {
+  id             String          @id @default(uuid()) @db.Uuid
+  tenantId       String          @map("tenant_id") @db.Uuid
+  organizationId String?         @map("organization_id") @db.Uuid
+  capability     AiCapability
+  status         AiRequestStatus @default(PROCESSING)
+  idempotencyKey String          @map("idempotency_key")
+  inputDigest    String          @map("input_digest") @db.Char(64)
+  modelVersion   String          @map("model_version")
+  promptVersion  String          @map("prompt_version")
+  provider       String
+  confidence     Float?
+  fallback       Boolean         @default(false)
+  redactedInput  Json            @default("{}") @map("redacted_input")
+  output         Json            @default("{}")
+  failureReason  String?         @map("failure_reason")
+  requestedById  String?         @map("requested_by_id") @db.Uuid
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  completedAt    DateTime?       @map("completed_at") @db.Timestamptz(3)
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  organization   Organization?   @relation(fields: [organizationId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, capability, createdAt(sort: Desc)])
+  @@index([tenantId, status, createdAt])
+  @@map("ai_insight_requests")
+}
+
+model MarketingEventReceipt {
+  id            String               @id @default(uuid()) @db.Uuid
+  tenantId      String               @map("tenant_id") @db.Uuid
+  eventId       String               @map("event_id")
+  eventType     String               @map("event_type")
+  status        MarketingEventStatus @default(PROCESSING)
+  payload       Json                 @default("{}")
+  attempts      Int                  @default(1)
+  failureReason String?              @map("failure_reason")
+  processedAt   DateTime?            @map("processed_at") @db.Timestamptz(3)
+  nextRetryAt   DateTime?            @map("next_retry_at") @db.Timestamptz(3)
+  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, eventId])
+  @@index([tenantId, status, nextRetryAt, createdAt])
+  @@map("marketing_event_receipts")
+}
+
+model Plan {
+  id                        String                   @id @default(uuid()) @db.Uuid
+  code                      String                   @unique
+  name                      String
+  description               String?
+  status                    PlanStatus               @default(DRAFT)
+  currency                  String                   @default("EUR") @db.Char(3)
+  monthlyPriceMinor         Int                      @default(0) @map("monthly_price_minor")
+  annualPriceMinor          Int                      @default(0) @map("annual_price_minor")
+  transactionFeeBasisPoints Int                      @default(0) @map("transaction_fee_basis_points")
+  trialDays                 Int                      @default(14) @map("trial_days")
+  sortOrder                 Int                      @default(0) @map("sort_order")
+  entitlements              Json
+  limits                    Json
+  createdAt                 DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                 DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  subscriptions             Subscription[]
+  featureEntitlements       PlanFeatureEntitlement[]
+  quotaLimits               PlanQuotaLimit[]
+
+  @@index([status, sortOrder])
+  @@map("plans")
+}
+
+model Subscription {
+  id                    String               @id @default(uuid()) @db.Uuid
+  tenantId              String               @map("tenant_id") @db.Uuid
+  planId                String               @map("plan_id") @db.Uuid
+  status                SubscriptionStatus   @default(TRIALING)
+  billingInterval       BillingInterval      @default(MONTHLY) @map("billing_interval")
+  startsAt              DateTime             @map("starts_at") @db.Timestamptz(3)
+  trialEndsAt           DateTime?            @map("trial_ends_at") @db.Timestamptz(3)
+  currentPeriodStartsAt DateTime?            @map("current_period_starts_at") @db.Timestamptz(3)
+  currentPeriodEndsAt   DateTime?            @map("current_period_ends_at") @db.Timestamptz(3)
+  nextBillingAt         DateTime?            @map("next_billing_at") @db.Timestamptz(3)
+  cancelAtPeriodEnd     Boolean              @default(false) @map("cancel_at_period_end")
+  canceledAt            DateTime?            @map("canceled_at") @db.Timestamptz(3)
+  suspendedAt           DateTime?            @map("suspended_at") @db.Timestamptz(3)
+  endedAt               DateTime?            @map("ended_at") @db.Timestamptz(3)
+  version               Int                  @default(1)
+  createdAt             DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan                  Plan                 @relation(fields: [planId], references: [id], onDelete: Restrict)
+  changes               SubscriptionChange[]
+  paymentIntents        PaymentIntent[]
+  payments              PaymentTransaction[]
+  invoices              Invoice[]
+  usageRecords          UsageRecord[]
+
+  @@unique([id, tenantId])
+  @@index([tenantId, status])
+  @@index([planId])
+  @@index([tenantId, startsAt])
+  @@map("subscriptions")
+}
+
+model PlanFeatureEntitlement {
+  id            String   @id @default(uuid()) @db.Uuid
+  planId        String   @map("plan_id") @db.Uuid
+  featureKey    String   @map("feature_key")
+  enabled       Boolean  @default(true)
+  configuration Json     @default("{}")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  plan          Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, featureKey])
+  @@index([featureKey, enabled])
+  @@map("plan_feature_entitlements")
+}
+
+model PlanQuotaLimit {
+  id         String   @id @default(uuid()) @db.Uuid
+  planId     String   @map("plan_id") @db.Uuid
+  metricKey  String   @map("metric_key")
+  limitValue Int      @map("limit_value")
+  period     String   @default("MONTH")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  plan       Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, metricKey])
+  @@map("plan_quota_limits")
+}
+
+model SubscriptionChange {
+  id             String                 @id @default(uuid()) @db.Uuid
+  tenantId       String                 @map("tenant_id") @db.Uuid
+  subscriptionId String                 @map("subscription_id") @db.Uuid
+  idempotencyKey String                 @map("idempotency_key")
+  type           SubscriptionChangeType
+  fromPlanId     String?                @map("from_plan_id") @db.Uuid
+  toPlanId       String?                @map("to_plan_id") @db.Uuid
+  reason         String?
+  metadata       Json                   @default("{}")
+  effectiveAt    DateTime               @default(now()) @map("effective_at") @db.Timestamptz(3)
+  createdAt      DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant         Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscription   Subscription           @relation(fields: [subscriptionId, tenantId], references: [id, tenantId], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, subscriptionId, effectiveAt(sort: Desc)])
+  @@map("subscription_changes")
+}
+
+model PaymentIntent {
+  id                String               @id @default(uuid()) @db.Uuid
+  tenantId          String               @map("tenant_id") @db.Uuid
+  subscriptionId    String               @map("subscription_id") @db.Uuid
+  idempotencyKey    String               @map("idempotency_key")
+  checkoutTokenHash String               @unique @map("checkout_token_hash") @db.Char(64)
+  amountMinor       Int                  @map("amount_minor")
+  currency          String               @db.Char(3)
+  status            PaymentStatus        @default(PENDING)
+  provider          String               @default("PFE_SANDBOX")
+  failureCode       String?              @map("failure_code")
+  expiresAt         DateTime             @map("expires_at") @db.Timestamptz(3)
+  confirmedAt       DateTime?            @map("confirmed_at") @db.Timestamptz(3)
+  createdAt         DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscription      Subscription         @relation(fields: [subscriptionId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  payments          PaymentTransaction[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, status, createdAt(sort: Desc)])
+  @@map("payment_intents")
+}
+
+model Invoice {
+  id             String               @id @default(uuid()) @db.Uuid
+  tenantId       String               @map("tenant_id") @db.Uuid
+  subscriptionId String               @map("subscription_id") @db.Uuid
+  number         String
+  status         InvoiceStatus        @default(OPEN)
+  currency       String               @db.Char(3)
+  subtotalMinor  Int                  @map("subtotal_minor")
+  feeMinor       Int                  @default(0) @map("fee_minor")
+  taxMinor       Int                  @default(0) @map("tax_minor")
+  totalMinor     Int                  @map("total_minor")
+  lineItems      Json                 @default("[]") @map("line_items")
+  periodStart    DateTime             @map("period_start") @db.Timestamptz(3)
+  periodEnd      DateTime             @map("period_end") @db.Timestamptz(3)
+  dueAt          DateTime             @map("due_at") @db.Timestamptz(3)
+  paidAt         DateTime?            @map("paid_at") @db.Timestamptz(3)
+  createdAt      DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant         Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscription   Subscription         @relation(fields: [subscriptionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  payments       PaymentTransaction[]
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, number])
+  @@index([tenantId, status, createdAt(sort: Desc)])
+  @@map("invoices")
+}
+
+model PaymentTransaction {
+  id              String        @id @default(uuid()) @db.Uuid
+  tenantId        String        @map("tenant_id") @db.Uuid
+  subscriptionId  String        @map("subscription_id") @db.Uuid
+  paymentIntentId String        @map("payment_intent_id") @db.Uuid
+  invoiceId       String?       @map("invoice_id") @db.Uuid
+  idempotencyKey  String        @map("idempotency_key")
+  status          PaymentStatus
+  amountMinor     Int           @map("amount_minor")
+  feeMinor        Int           @default(0) @map("fee_minor")
+  currency        String        @db.Char(3)
+  providerRef     String        @map("provider_ref")
+  failureCode     String?       @map("failure_code")
+  failureMessage  String?       @map("failure_message")
+  processedAt     DateTime      @default(now()) @map("processed_at") @db.Timestamptz(3)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscription    Subscription  @relation(fields: [subscriptionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  paymentIntent   PaymentIntent @relation(fields: [paymentIntentId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  invoice         Invoice?      @relation(fields: [invoiceId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, status, processedAt(sort: Desc)])
+  @@index([paymentIntentId, tenantId])
+  @@map("payment_transactions")
+}
+
+model BillingWebhook {
+  id            String               @id @default(uuid()) @db.Uuid
+  tenantId      String               @map("tenant_id") @db.Uuid
+  eventId       String               @map("event_id")
+  eventType     String               @map("event_type")
+  signatureHash String               @map("signature_hash") @db.Char(64)
+  payload       Json
+  status        BillingWebhookStatus @default(RECEIVED)
+  error         String?
+  receivedAt    DateTime             @default(now()) @map("received_at") @db.Timestamptz(3)
+  processedAt   DateTime?            @map("processed_at") @db.Timestamptz(3)
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, eventId])
+  @@index([tenantId, status, receivedAt(sort: Desc)])
+  @@map("billing_webhooks")
+}
+
+model UsageRecord {
+  id             String        @id @default(uuid()) @db.Uuid
+  tenantId       String        @map("tenant_id") @db.Uuid
+  subscriptionId String?       @map("subscription_id") @db.Uuid
+  metricKey      String        @map("metric_key")
+  quantity       Int
+  idempotencyKey String        @map("idempotency_key")
+  referenceType  String?       @map("reference_type")
+  referenceId    String?       @map("reference_id")
+  metadata       Json          @default("{}")
+  occurredAt     DateTime      @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  tenant         Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscription   Subscription? @relation(fields: [subscriptionId, tenantId], references: [id, tenantId], onDelete: Restrict)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, metricKey, occurredAt])
+  @@map("usage_records")
+}
+
+model TenantQuotaOverride {
+  id         String    @id @default(uuid()) @db.Uuid
+  tenantId   String    @map("tenant_id") @db.Uuid
+  metricKey  String    @map("metric_key")
+  limitValue Int       @map("limit_value")
+  reason     String
+  expiresAt  DateTime? @map("expires_at") @db.Timestamptz(3)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, metricKey])
+  @@map("tenant_quota_overrides")
+}
+
+model WhiteLabelProfile {
+  id              String   @id @default(uuid()) @db.Uuid
+  tenantId        String   @unique @map("tenant_id") @db.Uuid
+  productName     String   @default("Rabbehni") @map("product_name")
+  logoUrl         String?  @map("logo_url")
+  faviconUrl      String?  @map("favicon_url")
+  primaryColor    String   @default("#0F766E") @map("primary_color")
+  secondaryColor  String   @default("#2563EB") @map("secondary_color")
+  fontFamily      String   @default("Inter") @map("font_family")
+  emailSenderName String   @default("Rabbehni") @map("email_sender_name")
+  emailReplyTo    String?  @map("email_reply_to")
+  emailFooter     String?  @map("email_footer")
+  themeMode       String   @default("SYSTEM") @map("theme_mode")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@map("white_label_profiles")
+}
+
+model TenantLocalization {
+  id               String   @id @default(uuid()) @db.Uuid
+  tenantId         String   @unique @map("tenant_id") @db.Uuid
+  defaultLanguage  String   @default("fr") @map("default_language")
+  enabledLanguages Json     @default("[\"fr\",\"en\",\"ar\"]") @map("enabled_languages")
+  countries        Json     @default("[\"TN\"]")
+  currencies       Json     @default("[\"TND\"]")
+  timezones        Json     @default("[\"Africa/Tunis\"]")
+  dateFormat       String   @default("DD/MM/YYYY") @map("date_format")
+  timeFormat       String   @default("24h") @map("time_format")
+  numberLocale     String   @default("fr-TN") @map("number_locale")
+  direction        String   @default("LTR")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@map("tenant_localizations")
+}
+
+model CustomDomain {
+  id                String             @id @default(uuid()) @db.Uuid
+  tenantId          String             @map("tenant_id") @db.Uuid
+  hostname          String             @unique
+  status            CustomDomainStatus @default(PENDING)
+  verificationToken String             @map("verification_token")
+  verifiedAt        DateTime?          @map("verified_at") @db.Timestamptz(3)
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant            Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, status])
+  @@map("custom_domains")
+}
+
+model TenantSetting {
+  id          String   @id @default(uuid()) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  namespace   String
+  key         String
+  value       Json
+  version     Int      @default(1)
+  updatedById String?  @map("updated_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  updatedBy   User?    @relation("TenantSettingUpdater", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@unique([id, tenantId])
+  @@unique([tenantId, namespace, key])
+  @@index([updatedById])
+  @@map("tenant_settings")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  tenantId      String   @map("tenant_id") @db.Uuid
+  actorUserId   String?  @map("actor_user_id") @db.Uuid
+  action        String
+  entityType    String   @map("entity_type")
+  entityId      String?  @map("entity_id")
+  correlationId String   @map("correlation_id") @db.Uuid
+  requestId     String?  @map("request_id")
+  ipAddress     String?  @map("ip_address") @db.Inet
+  userAgent     String?  @map("user_agent")
+  metadata      Json?
+  occurredAt    DateTime @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  actor         User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, occurredAt(sort: Desc)])
+  @@index([tenantId, entityType, entityId])
+  @@index([actorUserId])
+  @@index([correlationId])
+  @@map("audit_logs")
+}
+
+model OutboxEvent {
+  id            String       @id @default(uuid()) @db.Uuid
+  tenantId      String       @map("tenant_id") @db.Uuid
+  eventType     String       @map("event_type")
+  aggregateType String       @map("aggregate_type")
+  aggregateId   String       @map("aggregate_id")
+  payload       Json
+  correlationId String       @map("correlation_id") @db.Uuid
+  status        OutboxStatus @default(PENDING)
+  attempts      Int          @default(0)
+  occurredAt    DateTime     @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  publishedAt   DateTime?    @map("published_at") @db.Timestamptz(3)
+  lastError     String?      @map("last_error")
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, status, occurredAt])
+  @@index([status, occurredAt])
+  @@map("outbox_events")
+}
+
+model AuthSession {
+  id                     String    @id @default(uuid()) @db.Uuid
+  tenantId               String    @map("tenant_id") @db.Uuid
+  userId                 String    @map("user_id") @db.Uuid
+  sessionTokenHash       String    @unique @map("session_token_hash") @db.Char(64)
+  refreshTokenCiphertext String    @map("refresh_token_ciphertext")
+  refreshTokenIv         String    @map("refresh_token_iv")
+  refreshTokenTag        String    @map("refresh_token_tag")
+  expiresAt              DateTime  @map("expires_at") @db.Timestamptz(3)
+  idleExpiresAt          DateTime  @map("idle_expires_at") @db.Timestamptz(3)
+  lastSeenAt             DateTime  @default(now()) @map("last_seen_at") @db.Timestamptz(3)
+  revokedAt              DateTime? @map("revoked_at") @db.Timestamptz(3)
+  ipAddress              String?   @map("ip_address") @db.Inet
+  userAgent              String?   @map("user_agent")
+  createdAt              DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  tenant                 Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([id, tenantId])
+  @@index([tenantId, userId])
+  @@index([tenantId, expiresAt])
+  @@index([tenantId, revokedAt])
+  @@map("auth_sessions")
+}

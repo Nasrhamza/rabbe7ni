@@ -1,0 +1,15 @@
+node_modules
+dist
+.next
+.nx
+.expo
+apps/customer-mobile/.android.backup-*/
+.runtime-logs
+.venv
+__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+coverage
+pnpm-lock.yaml
+packages/database/src/generated

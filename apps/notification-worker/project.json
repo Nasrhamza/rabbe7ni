@@ -1,0 +1,51 @@
+{
+  "name": "notification-worker",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/notification-worker/src",
+  "tags": ["scope:notification", "type:worker"],
+  "implicitDependencies": [
+    "cache",
+    "config",
+    "contracts",
+    "logger",
+    "nestjs-platform",
+    "observability",
+    "queue"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/notification-worker build"
+      },
+      "outputs": ["{workspaceRoot}/dist/apps/notification-worker"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/notification-worker dev"
+      },
+      "cache": false,
+      "continuous": true
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/notification-worker lint"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/notification-worker test"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm --filter @rabbehni/notification-worker typecheck"
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/index.ts",
+    "src/assets.ts",
+    "src/auth-slider.tsx",
+    "src/branch-map.tsx",
+    "src/structured-data-editor.tsx",
+    "src/language-switcher.tsx",
+    "src/locale.ts",
+    "src/icons.tsx",
+    "src/navigation-item.tsx",
+    "src/dashboard-web.tsx",
+    "src/theme-toggle.tsx",
+    "src/workspace-shell.tsx",
+    "src/tokens.ts",
+    "src/web.tsx",
+    "src/phase6-web.tsx",
+    "src/phase7-web.tsx",
+    "src/phase8-web.tsx",
+    "src/phase9-web.tsx"
+  ],
+  "exclude": ["src/native.tsx"]
+}

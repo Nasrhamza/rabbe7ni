@@ -1,0 +1,41 @@
+{
+  "name": "ai-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/ai-service/src",
+  "tags": ["scope:ai", "type:application"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m compileall -q apps/ai-service/src"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m uvicorn rabbehni_ai.main:app --app-dir apps/ai-service/src --reload --port 8000"
+      },
+      "cache": false,
+      "continuous": true
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m ruff check apps/ai-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m pytest apps/ai-service/tests"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "python -m mypy apps/ai-service/src apps/ai-service/tests"
+      }
+    }
+  }
+}

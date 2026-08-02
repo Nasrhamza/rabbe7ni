@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": false,
+    "outDir": "../../dist/apps/api",
+    "rootDir": "src",
+    "paths": {
+      "@rabbehni/cache": ["packages/cache/dist/index.d.ts"],
+      "@rabbehni/cache/nest": ["packages/cache/dist/nest/index.d.ts"],
+      "@rabbehni/config": ["packages/config/dist/index.d.ts"],
+      "@rabbehni/contracts": ["packages/contracts/dist/index.d.ts"],
+      "@rabbehni/database": ["packages/database/dist/index.d.ts"],
+      "@rabbehni/database/nest": ["packages/database/dist/nest/index.d.ts"],
+      "@rabbehni/logger": ["packages/logger/dist/index.d.ts"],
+      "@rabbehni/nestjs-platform": ["packages/nestjs-platform/dist/index.d.ts"],
+      "@rabbehni/observability": ["packages/observability/dist/index.d.ts"],
+      "@rabbehni/queue": ["packages/queue/dist/index.d.ts"]
+    },
+    "sourceMap": true
+  },
+  "exclude": ["tests/**/*.ts", "src/**/*.spec.ts"]
+}

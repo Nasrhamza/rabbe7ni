@@ -1,0 +1,24 @@
+{
+  "name": "@rabbehni/merchant-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node ../../tools/run-next-build.mjs",
+    "dev": "next dev --webpack --port 3002",
+    "lint": "eslint .",
+    "start": "next start --port 3002",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rabbehni/design-system": "workspace:*",
+    "next": "16.2.12",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "@types/react-dom": "^19.2.0"
+  }
+}

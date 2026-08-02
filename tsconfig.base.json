@@ -1,0 +1,61 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0",
+    "isolatedModules": true,
+    "lib": ["ES2024"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@rabbehni/config": ["packages/config/src/index.ts"],
+      "@rabbehni/contracts": ["packages/contracts/src/index.ts"],
+      "@rabbehni/design-system": ["packages/design-system/src/index.ts"],
+      "@rabbehni/design-system/assets": ["packages/design-system/src/assets.ts"],
+      "@rabbehni/design-system/auth-slider": ["packages/design-system/src/auth-slider.tsx"],
+      "@rabbehni/design-system/branch-map": ["packages/design-system/src/branch-map.tsx"],
+      "@rabbehni/design-system/structured-data-editor": [
+        "packages/design-system/src/structured-data-editor.tsx"
+      ],
+      "@rabbehni/design-system/dashboard-web": ["packages/design-system/src/dashboard-web.tsx"],
+      "@rabbehni/design-system/language-switcher": [
+        "packages/design-system/src/language-switcher.tsx"
+      ],
+      "@rabbehni/design-system/locale": ["packages/design-system/src/locale.ts"],
+      "@rabbehni/design-system/icons": ["packages/design-system/src/icons.tsx"],
+      "@rabbehni/design-system/navigation-item": ["packages/design-system/src/navigation-item.tsx"],
+      "@rabbehni/design-system/theme-toggle": ["packages/design-system/src/theme-toggle.tsx"],
+      "@rabbehni/design-system/workspace-shell": ["packages/design-system/src/workspace-shell.tsx"],
+      "@rabbehni/design-system/native": ["packages/design-system/src/native.tsx"],
+      "@rabbehni/design-system/web": ["packages/design-system/src/web.tsx"],
+      "@rabbehni/design-system/phase6-web": ["packages/design-system/src/phase6-web.tsx"],
+      "@rabbehni/design-system/phase7-web": ["packages/design-system/src/phase7-web.tsx"],
+      "@rabbehni/design-system/phase8-web": ["packages/design-system/src/phase8-web.tsx"],
+      "@rabbehni/design-system/phase9-web": ["packages/design-system/src/phase9-web.tsx"],
+      "@rabbehni/database": ["packages/database/src/index.ts"],
+      "@rabbehni/database/nest": ["packages/database/src/nest/index.ts"],
+      "@rabbehni/cache": ["packages/cache/src/index.ts"],
+      "@rabbehni/cache/nest": ["packages/cache/src/nest/index.ts"],
+      "@rabbehni/logger": ["packages/logger/src/index.ts"],
+      "@rabbehni/nestjs-platform": ["packages/nestjs-platform/src/index.ts"],
+      "@rabbehni/observability": ["packages/observability/src/index.ts"],
+      "@rabbehni/queue": ["packages/queue/src/index.ts"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2024",
+    "useDefineForClassFields": true
+  }
+}
