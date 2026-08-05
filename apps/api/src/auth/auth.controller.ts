@@ -24,8 +24,11 @@ import {
   customerRegistrationSchema,
   emailVerificationSchema,
   loginQuerySchema,
+  merchantRegistrationSchema,
   passwordResetSchema,
+  slugAvailabilitySchema,
 } from "./dto.js";
+import { PublicThrottle } from "../common/public-throttle.guard.js";
 
 @ApiTags("authentication")
 @Controller({
@@ -157,9 +160,30 @@ export class AuthController {
   @Public()
   @Post("customer-registration")
   @HttpCode(201)
+  @PublicThrottle({ bucket: "customer-registration", limit: 5, windowSeconds: 3_600 })
   @ApiOperation({ summary: "Register a tenant-scoped customer mobile account" })
   customerRegistration(@Body() rawBody: unknown) {
     return this.auth.registerCustomer(parseDto(customerRegistrationSchema, rawBody));
+  }
+
+  @Public()
+  @Get("workspace-slug")
+  @PublicThrottle({ bucket: "workspace-slug", limit: 60, windowSeconds: 60 })
+  @ApiOperation({ summary: "Check whether a merchant workspace address is still free" })
+  workspaceSlug(@Query() rawQuery: unknown) {
+    const { slug } = parseDto(slugAvailabilitySchema, rawQuery);
+    return this.auth.isWorkspaceSlugAvailable(slug);
+  }
+
+  @Public()
+  @Post("merchant-registration")
+  @HttpCode(201)
+  @PublicThrottle({ bucket: "merchant-registration", limit: 3, windowSeconds: 3_600 })
+  @ApiOperation({
+    summary: "Register a merchant and provision its tenant, first branch, owner and trial",
+  })
+  merchantRegistration(@Body() rawBody: unknown) {
+    return this.auth.registerMerchant(parseDto(merchantRegistrationSchema, rawBody));
   }
 
   private fingerprint(request: AuthenticatedRequest) {

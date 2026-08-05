@@ -17,6 +17,11 @@ interface CustomerIdentityInput {
   readonly tenantId: string;
 }
 
+interface IdentityInput extends CustomerIdentityInput {
+  /** Written to the Keycloak `portal` attribute so the realm can branch on account type. */
+  readonly portal: "customer" | "merchant";
+}
+
 @Injectable()
 export class KeycloakActionsService {
   private readonly clientId: string;
@@ -61,7 +66,15 @@ export class KeycloakActionsService {
     return { enabled: Boolean(user?.totp) };
   }
 
-  async createCustomerIdentity(input: CustomerIdentityInput): Promise<string> {
+  createCustomerIdentity(input: CustomerIdentityInput): Promise<string> {
+    return this.createIdentity({ ...input, portal: "customer" });
+  }
+
+  createOwnerIdentity(input: CustomerIdentityInput): Promise<string> {
+    return this.createIdentity({ ...input, portal: "merchant" });
+  }
+
+  private async createIdentity(input: IdentityInput): Promise<string> {
     const token = await this.adminToken();
     const names = input.displayName.trim().split(/\s+/u);
     const response = await fetch(this.adminUsersUrl, {
@@ -75,6 +88,7 @@ export class KeycloakActionsService {
         attributes: {
           tenant_id: [input.tenantId],
           locale: [input.locale],
+          portal: [input.portal],
         },
         credentials: [{ type: "password", value: input.password, temporary: false }],
         requiredActions: ["VERIFY_EMAIL"],
@@ -90,14 +104,50 @@ export class KeycloakActionsService {
       throw new ConflictException("An account already exists for this email");
     }
     if (!response?.ok) {
-      throw new ServiceUnavailableException("Keycloak could not create the customer identity");
+      throw new ServiceUnavailableException(
+        `Keycloak could not create the ${input.portal} identity`,
+      );
     }
     const location = response.headers.get("location");
     const userId = location?.split("/").filter(Boolean).at(-1);
     if (!userId) {
-      throw new ServiceUnavailableException("Keycloak returned an invalid customer identity");
+      throw new ServiceUnavailableException(
+        `Keycloak returned an invalid ${input.portal} identity`,
+      );
     }
     return userId;
+  }
+
+  /**
+   * Binds an existing identity to a tenant.
+   *
+   * Merchant registration creates the identity before the tenant id exists, so the `tenant_id`
+   * attribute is filled in afterwards. Keycloak replaces the whole attribute map on update, so the
+   * current representation is read first and merged — a bare write would drop `locale` and
+   * `portal`, and the authentication guard reads all three.
+   */
+  async assignTenant(userId: string, tenantId: string): Promise<void> {
+    const token = await this.adminToken();
+    const userUrl = `${this.adminUsersUrl}/${encodeURIComponent(userId)}`;
+    const current = await fetch(userUrl, {
+      headers: { authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(6_000),
+    }).catch(() => undefined);
+    if (!current?.ok) {
+      throw new ServiceUnavailableException("Keycloak could not load the identity to bind");
+    }
+    const representation = (await current.json()) as { attributes?: Record<string, unknown> };
+    const response = await fetch(userUrl, {
+      body: JSON.stringify({
+        attributes: { ...(representation.attributes ?? {}), tenant_id: [tenantId] },
+      }),
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      method: "PUT",
+      signal: AbortSignal.timeout(8_000),
+    }).catch(() => undefined);
+    if (!response?.ok) {
+      throw new ServiceUnavailableException("Keycloak could not bind the identity to its tenant");
+    }
   }
 
   async deleteIdentity(userId: string): Promise<void> {

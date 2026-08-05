@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { APP_GUARD } from "@nestjs/core";
 
 import { AuditModule } from "../audit/audit.module.js";
+import { PublicThrottleGuard } from "../common/public-throttle.guard.js";
 import { TenancyModule } from "../tenancy/tenancy.module.js";
 import { TenantIsolationGuard } from "../tenancy/tenant-isolation.guard.js";
 import { AuthController } from "./auth.controller.js";
@@ -24,6 +25,12 @@ import { SessionCryptoService } from "./session-crypto.service.js";
     KeycloakActionsService,
     AuthenticationGuard,
     AuthorizationGuard,
+    PublicThrottleGuard,
+    // Runs ahead of authentication so unauthenticated routes are throttled before doing any work.
+    {
+      provide: APP_GUARD,
+      useExisting: PublicThrottleGuard,
+    },
     {
       provide: APP_GUARD,
       useExisting: AuthenticationGuard,

@@ -1,18 +1,27 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Inject,
   Injectable,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
 import {
+  BranchStatus,
   CustomerStatus,
   MembershipStatus,
+  MerchantStatus,
+  OrganizationStatus,
+  PlanStatus,
   PointsEntryType,
+  Prisma,
   RoleScope,
+  StaffStatus,
+  SubscriptionStatus,
+  TenantStatus,
   UserStatus,
 } from "@rabbehni/database";
-import type { Prisma } from "@rabbehni/database";
 import { PrismaService, TenantTransactionService } from "@rabbehni/database/nest";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -276,6 +285,265 @@ export class AuthRepository {
         }),
       ]);
       return { customerId: customer.id, userId: user.id, referralApplied: Boolean(referral) };
+    });
+  }
+
+  /**
+   * Reports whether a workspace slug is free.
+   *
+   * Uses the `rabbehni_workspace_slug_available` SECURITY DEFINER function rather than a query,
+   * because the tenants table is under row level security keyed on its own id: an unauthenticated
+   * caller has no tenant context and a direct SELECT would report every slug as free.
+   */
+  async isWorkspaceSlugAvailable(slug: string): Promise<{ slug: string; available: boolean }> {
+    const rows = await this.prisma.$queryRaw<
+      readonly { available: boolean }[]
+    >`SELECT rabbehni_workspace_slug_available(${slug}) AS available`;
+    return { slug, available: rows[0]?.available ?? false };
+  }
+
+  /**
+   * Provisions a complete merchant workspace in a single transaction.
+   *
+   * Everything a self-registered merchant needs to sign in and operate — tenant, organization,
+   * merchant, first branch, owner user, owner role with the full permission catalogue, staff record
+   * and trial subscription — is created atomically. A partial workspace would leave an owner who
+   * can authenticate but has no tenant, or a tenant nobody can administer, so there is deliberately
+   * no intermediate commit.
+   *
+   * The Keycloak identity is created by the caller before this runs, because it lives outside the
+   * database transaction; the caller deletes it when this throws.
+   */
+  async provisionMerchantWorkspace(input: {
+    readonly workspaceSlug: string;
+    readonly businessName: string;
+    readonly legalName: string;
+    readonly countryCode: string;
+    readonly timezone: string;
+    readonly currency: string;
+    readonly locale: string;
+    readonly branchName: string;
+    readonly planCode: string;
+    readonly ownerName: string;
+    readonly ownerEmail: string;
+    readonly ownerPhone: string;
+    readonly externalSubject: string;
+  }) {
+    const tenantId = randomUUID();
+    const correlationId = randomUUID();
+
+    return this.transactions.run(tenantId, async (transaction) => {
+      const existingUser = await transaction.user.findUnique({
+        where: { normalizedEmail: input.ownerEmail },
+        select: { id: true },
+      });
+      if (existingUser) {
+        throw new ConflictException("An account already exists for this email");
+      }
+
+      // Plans are global reference data seeded by migration, not tenant rows.
+      const plan =
+        (await transaction.plan.findFirst({
+          where: { code: input.planCode, status: PlanStatus.ACTIVE },
+          select: { id: true, trialDays: true },
+        })) ??
+        (await transaction.plan.findFirst({
+          where: { status: PlanStatus.ACTIVE },
+          orderBy: { sortOrder: "asc" },
+          select: { id: true, trialDays: true },
+        }));
+      if (!plan) {
+        throw new ServiceUnavailableException("No subscription plan is available for registration");
+      }
+
+      // The tenants table is under RLS keyed on its own id, so a pre-flight slug lookup cannot see
+      // rows from other tenants. The unique constraint is the only reliable check, and it is
+      // enforced independently of RLS — hence catching the violation instead of querying first.
+      const tenant = await transaction.tenant
+        .create({
+          data: {
+            id: tenantId,
+            slug: input.workspaceSlug,
+            region: input.countryCode,
+            defaultLocale: input.locale,
+            defaultCurrency: input.currency,
+            status: TenantStatus.ACTIVE,
+          },
+        })
+        .catch((cause: unknown) => {
+          if (cause instanceof Prisma.PrismaClientKnownRequestError && cause.code === "P2002") {
+            throw new ConflictException("This workspace address is already taken");
+          }
+          throw cause;
+        });
+
+      const organization = await transaction.organization.create({
+        data: {
+          tenantId,
+          code: "MAIN",
+          legalName: input.legalName,
+          displayName: input.businessName,
+          countryCode: input.countryCode,
+          timezone: input.timezone,
+          status: OrganizationStatus.ACTIVE,
+          activatedAt: new Date(),
+        },
+      });
+
+      const merchant = await transaction.merchant.create({
+        data: {
+          tenantId,
+          organizationId: organization.id,
+          code: "MAIN",
+          legalName: input.legalName,
+          displayName: input.businessName,
+          countryCode: input.countryCode,
+          timezone: input.timezone,
+          locale: input.locale,
+          contactEmail: input.ownerEmail,
+          contactPhone: input.ownerPhone,
+          status: MerchantStatus.ACTIVE,
+          activatedAt: new Date(),
+        },
+      });
+
+      const branch = await transaction.branch.create({
+        data: {
+          tenantId,
+          organizationId: organization.id,
+          merchantId: merchant.id,
+          code: "MAIN",
+          name: input.branchName,
+          countryCode: input.countryCode,
+          timezone: input.timezone,
+          locale: input.locale,
+          currency: input.currency,
+          email: input.ownerEmail,
+          phone: input.ownerPhone,
+          status: BranchStatus.ACTIVE,
+        },
+      });
+
+      const user = await transaction.user.create({
+        data: {
+          externalSubject: input.externalSubject,
+          email: input.ownerEmail,
+          normalizedEmail: input.ownerEmail,
+          displayName: input.ownerName,
+          locale: input.locale,
+          status: UserStatus.ACTIVE,
+        },
+      });
+
+      const membership = await transaction.membership.create({
+        data: {
+          tenantId,
+          organizationId: organization.id,
+          userId: user.id,
+          status: MembershipStatus.ACTIVE,
+          joinedAt: new Date(),
+        },
+      });
+
+      const role = await transaction.role.create({
+        data: {
+          tenantId,
+          code: "owner",
+          name: "Owner",
+          description: "Full administrative access to the merchant workspace",
+          scope: RoleScope.ORGANIZATION,
+          system: true,
+        },
+      });
+
+      // The owner receives every permission in the catalogue. The catalogue itself is reference
+      // data installed by migration, so this is empty only on a database provisioned incorrectly.
+      const permissions = await transaction.permission.findMany({ select: { id: true } });
+      if (permissions.length === 0) {
+        throw new ServiceUnavailableException(
+          "The permission catalogue is missing; the database is not fully migrated",
+        );
+      }
+      await transaction.rolePermission.createMany({
+        data: permissions.map(({ id }) => ({ tenantId, roleId: role.id, permissionId: id })),
+        skipDuplicates: true,
+      });
+      await transaction.membershipRole.create({
+        data: { tenantId, membershipId: membership.id, roleId: role.id },
+      });
+
+      await transaction.staff.create({
+        data: {
+          tenantId,
+          membershipId: membership.id,
+          userId: user.id,
+          organizationId: organization.id,
+          merchantId: merchant.id,
+          branchId: branch.id,
+          jobTitle: "Owner",
+          status: StaffStatus.ACTIVE,
+          activatedAt: new Date(),
+        },
+      });
+
+      const now = new Date();
+      const trialEndsAt = new Date(now.getTime() + plan.trialDays * 86_400_000);
+      const subscription = await transaction.subscription.create({
+        data: {
+          tenantId,
+          planId: plan.id,
+          status: SubscriptionStatus.TRIALING,
+          billingInterval: "MONTHLY",
+          startsAt: now,
+          trialEndsAt,
+          currentPeriodStartsAt: now,
+          currentPeriodEndsAt: trialEndsAt,
+        },
+      });
+
+      const eventPayload = {
+        channel: "merchant-web",
+        organizationId: organization.id,
+        merchantId: merchant.id,
+        branchId: branch.id,
+        userId: user.id,
+        planId: plan.id,
+        slug: tenant.slug,
+      };
+      await Promise.all([
+        transaction.auditLog.create({
+          data: {
+            tenantId,
+            actorUserId: user.id,
+            action: "merchant.self_registered",
+            entityType: "tenant",
+            entityId: tenantId,
+            correlationId,
+            metadata: eventPayload as Prisma.InputJsonValue,
+          },
+        }),
+        transaction.outboxEvent.create({
+          data: {
+            tenantId,
+            eventType: "merchant.registered",
+            aggregateType: "tenant",
+            aggregateId: tenantId,
+            correlationId,
+            payload: eventPayload as Prisma.InputJsonValue,
+          },
+        }),
+      ]);
+
+      return {
+        tenantId,
+        slug: tenant.slug,
+        organizationId: organization.id,
+        merchantId: merchant.id,
+        branchId: branch.id,
+        userId: user.id,
+        subscriptionId: subscription.id,
+        trialEndsAt,
+      };
     });
   }
 

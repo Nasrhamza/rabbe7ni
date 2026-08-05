@@ -12,7 +12,7 @@ import { AuditService } from "../audit/audit.service.js";
 import { TenantContextStore } from "../tenancy/tenant-context.store.js";
 import { AuthRepository } from "./auth.repository.js";
 import type { AuthenticatedPrincipal, RabbehniTokenClaims } from "./auth.types.js";
-import type { CustomerRegistrationDto } from "./dto.js";
+import type { CustomerRegistrationDto, MerchantRegistrationDto } from "./dto.js";
 import { KeycloakActionsService } from "./keycloak-actions.service.js";
 import { OidcService } from "./oidc.service.js";
 import { SessionCryptoService } from "./session-crypto.service.js";
@@ -323,6 +323,59 @@ export class AuthService {
       await this.keycloakActions.deleteIdentity(externalSubject);
       throw error;
     }
+  }
+
+  /**
+   * Registers a merchant and provisions its workspace.
+   *
+   * The Keycloak identity has to exist before the database transaction, because the owner user row
+   * stores its subject. That puts one side effect outside the transaction, so a database failure
+   * would otherwise strand an orphan identity that permanently blocks the email address from
+   * registering again. The catch deletes it, mirroring customer registration.
+   */
+  async registerMerchant(input: MerchantRegistrationDto) {
+    const externalSubject = await this.keycloakActions.createOwnerIdentity({
+      displayName: input.ownerName,
+      email: input.ownerEmail,
+      locale: input.locale,
+      password: input.password,
+      tenantId: "pending",
+    });
+    try {
+      const workspace = await this.repository.provisionMerchantWorkspace({
+        workspaceSlug: input.workspaceSlug,
+        businessName: input.businessName,
+        legalName: input.legalName ?? input.businessName,
+        countryCode: input.countryCode,
+        timezone: input.timezone,
+        currency: input.currency,
+        locale: input.locale,
+        branchName: input.branchName ?? input.businessName,
+        planCode: input.planCode,
+        ownerName: input.ownerName,
+        ownerEmail: input.ownerEmail,
+        ownerPhone: input.ownerPhone,
+        externalSubject,
+      });
+      // The identity was created before the tenant id existed; bind it now so the token carries
+      // the tenant claim the authentication guard requires.
+      await this.keycloakActions.assignTenant(externalSubject, workspace.tenantId);
+      return {
+        registered: true,
+        tenantId: workspace.tenantId,
+        slug: workspace.slug,
+        merchantId: workspace.merchantId,
+        trialEndsAt: workspace.trialEndsAt.toISOString(),
+        requiresEmailVerification: true,
+      };
+    } catch (error) {
+      await this.keycloakActions.deleteIdentity(externalSubject);
+      throw error;
+    }
+  }
+
+  isWorkspaceSlugAvailable(slug: string) {
+    return this.repository.isWorkspaceSlugAvailable(slug);
   }
 
   private assertAllowedRedirectUri(redirectUri: string): void {
