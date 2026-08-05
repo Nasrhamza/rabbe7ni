@@ -73,7 +73,15 @@
       "default": "./dist/phase9-web.js"
     },
     "./native": "./src/native.tsx",
-    "./styles.css": "./src/styles.css"
+    "./styles.css": "./src/styles.css",
+    "./i18n": {
+      "types": "./dist/i18n.d.ts",
+      "default": "./dist/i18n.js"
+    },
+    "./signup-web": {
+      "types": "./dist/signup-web.d.ts",
+      "default": "./dist/signup-web.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

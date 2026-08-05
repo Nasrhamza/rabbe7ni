@@ -55,13 +55,29 @@ export class PublicThrottleGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const key = `throttle:${options.bucket}:${request.ip ?? "unknown"}`;
 
-    // INCR then EXPIRE on first hit gives a fixed window without a read-modify-write race.
-    const hits = await this.redis.incr(key);
-    if (hits === 1) {
-      await this.redis.expire(key, options.windowSeconds);
+    let hits: number;
+    try {
+      // INCR then EXPIRE on first hit gives a fixed window without a read-modify-write race.
+      hits = await this.redis.incr(key);
+      if (hits === 1) {
+        await this.redis.expire(key, options.windowSeconds);
+      }
+    } catch {
+      // Fail closed: without a counter there is no abuse ceiling, and these routes create tenants
+      // and dispatch mail. Redis is already a readiness dependency, so an unreachable store means
+      // this instance should be out of rotation anyway — answer 503 rather than surfacing the
+      // driver error as an opaque 500.
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.SERVICE_UNAVAILABLE,
+          message: "Registration is temporarily unavailable. Please try again shortly.",
+        },
+        HttpStatus.SERVICE_UNAVAILABLE,
+      );
     }
+
     if (hits > options.limit) {
-      const retryAfter = await this.redis.ttl(key);
+      const retryAfter = await this.redis.ttl(key).catch(() => options.windowSeconds);
       throw new HttpException(
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,

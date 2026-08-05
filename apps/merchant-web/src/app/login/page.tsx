@@ -18,6 +18,7 @@ export default function MerchantLoginPage() {
       loginUrl={loginUrl}
       portalLabel="Espace commerçant"
       productName="Rabbehni Merchant"
+      signupHref="/signup"
       tone="merchant"
     />
   );

@@ -25,7 +25,9 @@
     "src/phase6-web.tsx",
     "src/phase7-web.tsx",
     "src/phase8-web.tsx",
-    "src/phase9-web.tsx"
+    "src/phase9-web.tsx",
+    "src/i18n.tsx",
+    "src/signup-web.tsx"
   ],
   "exclude": ["src/native.tsx"]
 }

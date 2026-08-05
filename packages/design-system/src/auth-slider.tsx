@@ -13,6 +13,11 @@ type SlidingAuthProps = Readonly<{
   loginUrl: string;
   portalLabel: string;
   productName: string;
+  /**
+   * Self-service registration entry point. When set, the first-access panel invites the visitor to
+   * create a workspace instead of telling them an administrator must do it for them.
+   */
+  signupHref?: string;
   tone: PortalTone;
 }>;
 
@@ -48,6 +53,7 @@ export function SlidingAuth({
   loginUrl,
   portalLabel,
   productName,
+  signupHref,
   tone,
 }: SlidingAuthProps) {
   const [firstAccess, setFirstAccess] = useState(false);
@@ -74,26 +80,51 @@ export function SlidingAuth({
       >
         <div className="rb-login__form-panel rb-login__form-panel--first-access">
           <form onSubmit={continueToIdentity}>
-            <span className="rb-login__eyebrow">Accès sur invitation</span>
-            <h1>Première connexion</h1>
+            <span className="rb-login__eyebrow">
+              {signupHref ? "Essai gratuit" : "Accès sur invitation"}
+            </span>
+            <h1>{signupHref ? "Créer mon espace" : "Première connexion"}</h1>
             <p>
-              Votre compte doit être créé par un administrateur et associé à votre organisation ou
-              commerce.
+              {signupHref
+                ? "Ouvrez votre espace Rabbehni en quelques minutes. Aucune carte bancaire n’est demandée."
+                : "Votre compte doit être créé par un administrateur et associé à votre organisation ou commerce."}
             </p>
             <div className="rb-login__steps" aria-label="Étapes d’activation">
-              <span>
-                <b>1</b> Ouvrez votre invitation sécurisée
-              </span>
-              <span>
-                <b>2</b> Créez votre mot de passe
-              </span>
-              <span>
-                <b>3</b> Accédez à votre espace
-              </span>
+              {signupHref ? (
+                <>
+                  <span>
+                    <b>1</b> Décrivez votre commerce
+                  </span>
+                  <span>
+                    <b>2</b> Choisissez votre adresse
+                  </span>
+                  <span>
+                    <b>3</b> Commencez votre essai
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span>
+                    <b>1</b> Ouvrez votre invitation sécurisée
+                  </span>
+                  <span>
+                    <b>2</b> Créez votre mot de passe
+                  </span>
+                  <span>
+                    <b>3</b> Accédez à votre espace
+                  </span>
+                </>
+              )}
             </div>
-            <button className="rb-login__primary" type="submit">
-              Activer mon accès
-            </button>
+            {signupHref ? (
+              <a className="rb-login__primary" href={signupHref}>
+                Créer mon espace
+              </a>
+            ) : (
+              <button className="rb-login__primary" type="submit">
+                Activer mon accès
+              </button>
+            )}
             <button
               className="rb-login__mobile-switch"
               onClick={() => setFirstAccess(false)}
