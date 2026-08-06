@@ -1,13 +1,14 @@
 import { Module } from "@nestjs/common";
 
 import { PointsModule } from "../points/points.module.js";
+import { RegionsModule } from "../regions/regions.module.js";
 import { RewardsModule } from "../rewards/rewards.module.js";
 import { GamesController } from "./games.controller.js";
 import { GamesRepository } from "./games.repository.js";
 import { GamesService } from "./games.service.js";
 
 @Module({
-  imports: [PointsModule, RewardsModule],
+  imports: [PointsModule, RewardsModule, RegionsModule],
   controllers: [GamesController],
   providers: [GamesRepository, GamesService],
 })

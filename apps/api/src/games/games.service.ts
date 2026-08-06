@@ -1,9 +1,12 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { PointsEntryType } from "@rabbehni/database";
+import { z } from "zod";
 
 import { parseDto } from "../common/validation.js";
 import { PointsService } from "../points/points.service.js";
+import { CulturalProfileService } from "../regions/cultural-profile.service.js";
 import { RewardsService } from "../rewards/rewards.service.js";
+import { suggestPrizeTemplates } from "./cultural-prize-templates.js";
 import {
   createGameSchema,
   gameCodeSchema,
@@ -14,13 +17,28 @@ import {
 } from "./dto.js";
 import { GamesRepository } from "./games.repository.js";
 
+const organizationIdSchema = z.object({ organizationId: z.uuid() });
+
 @Injectable()
 export class GamesService {
   constructor(
     @Inject(GamesRepository) private readonly games: GamesRepository,
     @Inject(PointsService) private readonly points: PointsService,
     @Inject(RewardsService) private readonly rewards: RewardsService,
+    @Inject(CulturalProfileService) private readonly culturalProfiles: CulturalProfileService,
   ) {}
+
+  /**
+   * Suggests a starting prize table for a new game, adapted to the organization's region.
+   *
+   * The merchant still configures the real prize table through `PUT /v1/games/:id/prizes`; this is
+   * a prefill the game studio can offer and the merchant can accept, edit, or ignore.
+   */
+  async culturalPrizeSuggestions(rawQuery: unknown) {
+    const { organizationId } = parseDto(organizationIdSchema, rawQuery);
+    const profile = await this.culturalProfiles.resolveForOrganization(organizationId);
+    return { profile, prizes: suggestPrizeTemplates(profile?.rewardStyle) };
+  }
 
   list(management = false) {
     return this.games.list(management);

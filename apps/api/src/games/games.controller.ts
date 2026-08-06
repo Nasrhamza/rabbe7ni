@@ -21,6 +21,12 @@ export class GamesController {
     return this.games.create(body);
   }
 
+  @Get("culture/prize-suggestions")
+  @RequirePermissions("gamification.manage")
+  culturalPrizeSuggestions(@Query() query: unknown) {
+    return this.games.culturalPrizeSuggestions(query);
+  }
+
   @Get(":id")
   @RequirePermissions("gamification.manage")
   get(@Param("id") id: string) {
