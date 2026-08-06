@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-import { Animated, Image, PanResponder, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
+import { Confetti, MysteryBox, PrizeWheel, ScratchCard, pulse } from "./game-visuals";
 import scratchCard from "./assets/rabbehni/gamification/icon-scratch-card.png";
-import mysteryBox from "./assets/rabbehni/gamification/icon-reward-gift-box.png";
-import spinWheel from "./assets/rabbehni/gamification/icon-spin-and-win-wheel.png";
 import trophy from "./assets/rabbehni/gamification/icon-win-trophy.png";
 
 export type GameCode = "MYSTERY_BOX" | "SCRATCH_CARD" | "SPIN_WHEEL";
@@ -61,6 +60,7 @@ function availability(game?: CustomerGame): string {
 function PrizeReveal({ result, onClose }: { result: GamePlayResult; onClose: () => void }) {
   return (
     <View accessibilityLiveRegion="polite" style={styles.resultCard}>
+      <Confetti />
       <Image resizeMode="contain" source={trophy} style={styles.resultImage} />
       <Text style={styles.resultEyebrow}>FÉLICITATIONS</Text>
       <Text style={styles.resultTitle}>{result.prize.label}</Text>
@@ -90,14 +90,15 @@ export function GamesCenter({
   const wheel = games?.games.find((game) => game.code === "SPIN_WHEEL");
   const scratch = games?.games.find((game) => game.code === "SCRATCH_CARD");
   const box = games?.games.find((game) => game.code === "MYSTERY_BOX");
-  const spinProgress = useRef(new Animated.Value(0)).current;
+  const [spinTarget, setSpinTarget] = useState<number>();
+  const pendingWheelResult = useRef<GamePlayResult | undefined>(undefined);
   const [activeGame, setActiveGame] = useState<GameCode>("SPIN_WHEEL");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<GamePlayResult>();
   const [scratchResult, setScratchResult] = useState<GamePlayResult>();
   const scratchResultRef = useRef<GamePlayResult | undefined>(undefined);
-  const [revealed, setRevealed] = useState<ReadonlySet<number>>(new Set());
+  const [boxOpened, setBoxOpened] = useState(false);
 
   async function spin() {
     if (!wheel?.eligible || busy) return;
@@ -106,20 +107,15 @@ export function GamesCenter({
     setResult(undefined);
     try {
       const played = await onPlay("SPIN_WHEEL");
+      // The server is the authority on the prize; the wheel is told which segment to stop on so
+      // what the player sees under the pointer matches what they were actually awarded.
       const prizeIndex = Math.max(
         0,
         wheel.prizes.findIndex((prize) => prize.code === played.prize.code),
       );
-      spinProgress.setValue(0);
-      Animated.timing(spinProgress, {
-        duration: 2800,
-        toValue: 1,
-        useNativeDriver: true,
-      }).start(() => {
-        setResult(played);
-        setBusy(false);
-      });
-      spinProgress.setOffset(prizeIndex / Math.max(1, wheel.prizes.length));
+      pendingWheelResult.current = played;
+      pulse("tick");
+      setSpinTarget(prizeIndex);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "La roue est indisponible.");
       setBusy(false);
@@ -131,7 +127,6 @@ export function GamesCenter({
     setBusy(true);
     setError("");
     setResult(undefined);
-    setRevealed(new Set());
     try {
       const played = await onPlay("SCRATCH_CARD");
       scratchResultRef.current = played;
@@ -150,44 +145,18 @@ export function GamesCenter({
     setResult(undefined);
     try {
       const played = await onPlay("MYSTERY_BOX");
+      // Let the lid animation play out before the prize card replaces the box.
+      setBoxOpened(true);
       setTimeout(() => {
         setResult(played);
         setBusy(false);
+        setBoxOpened(false);
       }, 900);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Le coffre est indisponible.");
       setBusy(false);
     }
   }
-
-  function revealAt(x: number, y: number) {
-    if (!scratchResultRef.current) return;
-    const column = Math.max(0, Math.min(5, Math.floor(x / 50)));
-    const row = Math.max(0, Math.min(3, Math.floor(y / 45)));
-    const index = row * 6 + column;
-    setRevealed((current) => {
-      if (current.has(index)) return current;
-      const next = new Set(current);
-      next.add(index);
-      if (next.size >= 14) setResult(scratchResultRef.current);
-      return next;
-    });
-  }
-
-  const scratchResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (event) =>
-        revealAt(event.nativeEvent.locationX, event.nativeEvent.locationY),
-      onPanResponderMove: (event) =>
-        revealAt(event.nativeEvent.locationX, event.nativeEvent.locationY),
-    }),
-  ).current;
-
-  const rotation = spinProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "2160deg"],
-  });
 
   return (
     <View style={styles.screen}>
@@ -254,12 +223,23 @@ export function GamesCenter({
             <Text style={styles.dailyBadge}>1 chance</Text>
           </View>
           <View style={styles.wheelStage}>
-            <View style={styles.pointer} />
-            <Animated.Image
-              accessibilityLabel="Roue des récompenses"
-              resizeMode="contain"
-              source={spinWheel}
-              style={[styles.wheelImage, { transform: [{ rotate: rotation }] }]}
+            <PrizeWheel
+              onSettled={() => {
+                if (pendingWheelResult.current) setResult(pendingWheelResult.current);
+                pendingWheelResult.current = undefined;
+                setSpinTarget(undefined);
+                setBusy(false);
+              }}
+              prizes={
+                wheel?.prizes.length
+                  ? wheel.prizes
+                  : [
+                      { code: "a", label: "—", color: "#e5e0d8" },
+                      { code: "b", label: "—", color: "#f2eee8" },
+                    ]
+              }
+              spinning={spinTarget !== undefined}
+              targetIndex={spinTarget}
             />
           </View>
           <Text style={styles.instructions}>Appuyez sur le bouton pour lancer la roue.</Text>
@@ -295,21 +275,15 @@ export function GamesCenter({
             <Image resizeMode="contain" source={scratchCard} style={styles.smallGameImage} />
           </View>
           {scratchResult ? (
-            <View {...scratchResponder.panHandlers} style={styles.scratchBoard}>
-              <View style={styles.scratchPrize}>
+            <View style={styles.scratchBoard}>
+              <ScratchCard
+                onRevealed={() => {
+                  if (scratchResultRef.current) setResult(scratchResultRef.current);
+                }}
+              >
                 <Text style={styles.scratchPrizeLabel}>VOTRE SURPRISE</Text>
                 <Text style={styles.scratchPrizeValue}>{scratchResult.prize.label}</Text>
-              </View>
-              <View pointerEvents="none" style={styles.scratchTiles}>
-                {Array.from({ length: 24 }, (_, index) => (
-                  <View
-                    key={index}
-                    style={[styles.scratchTile, revealed.has(index) && styles.scratchTileRevealed]}
-                  >
-                    {!revealed.has(index) ? <Text style={styles.scratchStar}>★</Text> : null}
-                  </View>
-                ))}
-              </View>
+              </ScratchCard>
             </View>
           ) : (
             <View style={styles.scratchPreview}>
@@ -347,12 +321,7 @@ export function GamesCenter({
           </View>
           <View style={styles.boxStage}>
             <View style={styles.boxGlow} />
-            <Image
-              accessibilityLabel="Coffre mystère Rabbehni"
-              resizeMode="contain"
-              source={mysteryBox}
-              style={[styles.boxImage, busy && styles.boxImageBusy]}
-            />
+            <MysteryBox opened={boxOpened} opening={busy && !boxOpened} />
           </View>
           <Text style={styles.instructions}>
             Le serveur choisit la surprise selon les probabilités configurées par le commerce.
@@ -419,8 +388,6 @@ const styles = StyleSheet.create({
     width: 180,
   },
   boxHeadingCopy: { flex: 1, paddingRight: 10 },
-  boxImage: { height: 190, width: 190 },
-  boxImageBusy: { opacity: 0.72, transform: [{ scale: 1.08 }] },
   boxStage: { alignItems: "center", height: 220, justifyContent: "center" },
   cardHeading: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   dailyBadge: {
@@ -505,17 +472,6 @@ const styles = StyleSheet.create({
   historyTitle: { color: "#172033", fontSize: 18, fontWeight: "900", marginBottom: 4 },
   instructions: { color: "#64748b", fontSize: 13, lineHeight: 19, textAlign: "center" },
   kicker: { color: "#bfdbfe", fontSize: 11, fontWeight: "900", letterSpacing: 1.4 },
-  pointer: {
-    borderLeftColor: "transparent",
-    borderLeftWidth: 12,
-    borderRightColor: "transparent",
-    borderRightWidth: 12,
-    borderTopColor: "#dc2626",
-    borderTopWidth: 22,
-    position: "absolute",
-    top: 2,
-    zIndex: 2,
-  },
   pressedButton: { transform: [{ scale: 0.98 }] },
   primaryButton: {
     alignItems: "center",
@@ -562,26 +518,6 @@ const styles = StyleSheet.create({
   scratchPrize: { alignItems: "center", flex: 1, justifyContent: "center" },
   scratchPrizeLabel: { color: "#92400e", fontSize: 11, fontWeight: "900", letterSpacing: 1.4 },
   scratchPrizeValue: { color: "#7c2d12", fontSize: 28, fontWeight: "900", marginTop: 7 },
-  scratchStar: { color: "rgba(255,255,255,0.75)", fontSize: 14 },
-  scratchTile: {
-    alignItems: "center",
-    backgroundColor: "#94a3b8",
-    borderColor: "rgba(255,255,255,0.28)",
-    borderWidth: 0.5,
-    height: 45,
-    justifyContent: "center",
-    width: 50,
-  },
-  scratchTileRevealed: { backgroundColor: "transparent", borderColor: "transparent" },
-  scratchTiles: {
-    bottom: 0,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    left: 0,
-    position: "absolute",
-    right: 0,
-    top: 0,
-  },
   screen: { gap: 14 },
   smallGameImage: { height: 58, width: 70 },
   switchButton: { alignItems: "center", borderRadius: 13, flex: 1, paddingVertical: 11 },
@@ -589,6 +525,5 @@ const styles = StyleSheet.create({
   switchText: { color: "#64748b", fontSize: 14, fontWeight: "700" },
   switchTextActive: { color: "#1d4ed8", fontSize: 14, fontWeight: "900" },
   waiting: { color: "#b45309", fontSize: 12, fontWeight: "800", marginTop: 6 },
-  wheelImage: { height: 230, width: 230 },
   wheelStage: { alignItems: "center", height: 250, justifyContent: "center", marginTop: 6 },
 });
