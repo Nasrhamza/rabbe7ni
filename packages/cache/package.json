@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@nestjs/common": "11.1.28",
-    "ioredis": "5.11.1"
+    "ioredis": "6.0.0"
   }
 }
