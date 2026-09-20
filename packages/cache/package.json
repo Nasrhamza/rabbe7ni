@@ -20,7 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@nestjs/common": "11.1.28",
-    "ioredis": "5.11.1"
+    "@nestjs/common": "12.0.3",
+    "ioredis": "6.0.0"
   }
 }
