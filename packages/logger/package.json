@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "pino": "10.3.1",
+    "pino": "10.4.0",
     "pino-http": "11.0.0"
   }
 }
